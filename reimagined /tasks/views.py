@@ -32,6 +32,29 @@ def process_todo(request):
         })
 
 
+def process_todo_timeline(request):
+    if request.method != 'POST':
+        return redirect('todo_timeline_input')
+    
+    task_list_name = request.POST.get('task_list_name', 'My Tasks').strip()
+    todo_text = request.POST.get('todo_text', '').strip()
+    
+    if not todo_text:
+        return render(request, 'tasks/todo_timeline_input.html', {
+            'error': 'Todo text is required.'
+        })
+    
+    try:
+        groomer = TaskGroomer()
+        task_list = groomer.process_todo(task_list_name, todo_text)
+        return redirect('todo_dependencies', task_list_id=task_list.id)
+    except ValueError as e:
+        return render(request, 'tasks/todo_timeline_input.html', {
+            'error': str(e),
+            'todo_text': todo_text
+        })
+
+
 def results(request, task_list_id):
     task_list = get_object_or_404(TaskList, id=task_list_id)
     tasks = task_list.tasks.all()
@@ -39,5 +62,45 @@ def results(request, task_list_id):
     return render(request, 'tasks/results.html', {
         'task_list': task_list,
         'tasks': tasks,
+        'total_time': task_list.total_estimated_time()
+    })
+
+
+# New Navigation Views
+def personal_assistance(request):
+    return render(request, 'tasks/personal_assistance.html')
+
+
+def executive_function(request):
+    return render(request, 'tasks/executive_function.html')
+
+
+def todo_timeline_input(request):
+    return render(request, 'tasks/todo_timeline_input.html')
+
+
+def todo_dependencies(request, task_list_id):
+    task_list = get_object_or_404(TaskList, id=task_list_id)
+    tasks = task_list.tasks.all()
+    
+    return render(request, 'tasks/todo_dependencies.html', {
+        'task_list': task_list,
+        'tasks': tasks,
+    })
+
+
+def timeline_execution(request, task_list_id):
+    task_list = get_object_or_404(TaskList, id=task_list_id)
+    tasks = task_list.tasks.all()
+    
+    # Separate current task and parallel tasks for timeline display
+    current_task = tasks.filter(can_run_parallel=False).first()
+    parallel_tasks = tasks.filter(can_run_parallel=True)
+    
+    return render(request, 'tasks/timeline_execution.html', {
+        'task_list': task_list,
+        'tasks': tasks,
+        'current_task': current_task,
+        'parallel_tasks': parallel_tasks,
         'total_time': task_list.total_estimated_time()
     })

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Times and Dependencies{% endblock %}
+
+{% block content %}
+<div class="dependencies-container">
+    <div class="page-header">
+        <h1>Times and Dependencies</h1>
+        <p>Establish ToDos</p>
+    </div>
+    
+    <div class="tasks-section">
+        {% for task in tasks %}
+        <div class="task-card">
+            <h3>&lt;{{ task.title }}&gt;</h3>
+            <div class="task-detail">
+                <strong>Time:</strong> &lt;{{ task.estimated_duration }} minutes&gt;
+            </div>
+            <div class="task-detail">
+                <strong>Dependencies:</strong> &lt;{% if task.dependencies %}{{ task.dependencies }}{% else %}No dependencies{% endif %}&gt;
+            </div>
+        </div>
+        {% empty %}
+        <p>No tasks found.</p>
+        {% endfor %}
+    </div>
+    
+    <div class="button-section">
+        <a href="/personal-assistance/executive-function/todo-timeline/execute/{{ task_list.id }}/" class="btn-next">Next</a>
+    </div>
+</div>
+
+<style>
+.dependencies-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.tasks-section {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.task-card {
+    background: rgba(162, 210, 194, 0.8);
+    border-radius: 15px;
+    padding: 25px 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.task-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.task-detail {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.task-detail strong {
+    font-weight: 600;
+}
+
+.button-section {
+    width: 100%;
+    max-width: 400px;
+}
+
+.btn-next {
+    display: block;
+    width: 100%;
+    background: rgba(181, 206, 255, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+</style>
+{% endblock %}

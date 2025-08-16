@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Executive Function{% endblock %}
+
+{% block content %}
+<div class="navigation-container">
+    <div class="page-header">
+        <h1>Executive Function</h1>
+    </div>
+    
+    <div class="navigation-cards">
+        <a href="/personal-assistance/executive-function/todo-timeline/" class="nav-card todo-timeline">
+            <div class="card-content">
+                <h2>ToDo Timeline</h2>
+            </div>
+        </a>
+        
+        <a href="#" class="nav-card pomodoro">
+            <div class="card-content">
+                <h2>Pomodoro</h2>
+            </div>
+        </a>
+        
+        <a href="#" class="nav-card routines">
+            <div class="card-content">
+                <h2>Routines</h2>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+.navigation-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 30px 50px;
+    margin-bottom: 60px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin: 0;
+}
+
+.navigation-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.nav-card {
+    padding: 25px 40px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.todo-timeline {
+    background: rgba(255, 248, 181, 0.9);
+}
+
+.pomodoro {
+    background: rgba(200, 255, 200, 0.9);
+}
+
+.routines {
+    background: rgba(181, 206, 255, 0.9);
+}
+
+.card-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin: 0;
+}
+</style>
+{% endblock %}
