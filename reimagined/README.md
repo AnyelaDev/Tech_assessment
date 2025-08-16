@@ -7,8 +7,8 @@ Django application that converts free-form todo lists into structured schedules 
 ### Setup
 ```bash
 cd "/home/anveg/Development/Tech_assessment/reimagined"
-./venv/bin/python manage.py migrate
-./venv/bin/python manage.py runserver
+python manage.py migrate
+python manage.py runserver
 ```
 
 Alternative if virtual environment activation works:
@@ -20,7 +20,7 @@ python3 manage.py runserver
 
 ### Database Testing
 ```bash
-./venv/bin/python manage.py shell
+python manage.py shell
 
 # Create test data
 from tasks.models import TaskList, Task
@@ -34,7 +34,7 @@ print(f"Created: {task}")
 # First add your Hugging Face API key to .env file:
 # HUGGINGFACE_API_KEY=your-actual-api-key-here
 
-./venv/bin/python manage.py shell
+python manage.py shell
 
 # Test AI integration (will fail without valid API key)
 from tasks.services import TaskGroomer
@@ -49,7 +49,7 @@ except ValueError as e:
 ### UI Testing
 ```bash
 # Start the development server
-./venv/bin/python manage.py runserver
+python manage.py runserver
 
 # Open browser to http://127.0.0.1:8000/
 # Navigate through the new UI:
@@ -67,5 +67,5 @@ except ValueError as e:
 
 ### Run Tests
 ```bash
-DJANGO_SETTINGS_MODULE=mindtimer.settings ./venv/bin/python -m pytest tasks/tests/ -v
+DJANGO_SETTINGS_MODULE=mindtimer.settings python -m pytest tasks/tests/ -v
 ```
