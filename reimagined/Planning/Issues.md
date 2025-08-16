@@ -12,9 +12,9 @@ To create issue{{
 }}
 
 ---
-# List of issues by claude here. 
+# Issues in GitHub
 
-## Issue 1
+## Issue #5
 **Title:** Fix Hugging Face Integration - Use Remote API Instead of Local Model
 
 **Description:** Current HF integration tries to download and run models locally instead of using remote inference API, causing performance issues or failures.
@@ -27,6 +27,9 @@ To create issue{{
 
 **Impact:** High
 **Priority:** High
+
+---
+# List of issues not created yet. 
 
 ## Issue 2
 **Title:** Define Minimal Models Explicitly
