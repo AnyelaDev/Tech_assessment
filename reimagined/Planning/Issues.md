@@ -140,3 +140,85 @@ To create issue{{
 
 ---
 # Plan and dependencies comentary.
+
+## Development Plan Overview
+
+This plan follows a logical sequence that builds core functionality first, then adds quality and security layers, and finally polishes the application.
+
+### Phase 1: Core Foundation (Issues 1-2)
+**Goal:** Get the basic functionality working end-to-end
+
+1. **Start with Issue 1 (HF Integration)** - This is the critical blocker that prevents the app from working at all. Must be fixed before meaningful testing can happen.
+   - Replace local model loading with remote API calls
+   - Create testable HFClient wrapper
+   - This enables all other development work
+
+2. **Follow with Issue 2 (Models)** - Define the data structure that everything else depends on
+   - TaskList and Task models form the backbone of the application
+   - Required before writing meaningful tests or service improvements
+   - No other dependencies block this work
+
+**Dependencies:** Issue 1 must be completed before Issue 2 can be properly tested, but Issue 2 can be developed in parallel.
+
+### Phase 2: Quality & Architecture (Issues 3-6)
+**Goal:** Build reliability, security, and maintainable architecture
+
+3. **Issue 3 (Tests)** - Can start once Issues 1-2 are complete
+   - Depends on working HF integration (Issue 1) for integration tests
+   - Depends on proper models (Issue 2) for model tests
+   - Tests will validate that the foundation works correctly
+
+4. **Issue 4 (Configuration)** - Can be done in parallel with testing
+   - Independent task that improves security
+   - Makes the app more production-ready
+   - No blocking dependencies
+
+5. **Issue 5 (Service Architecture)** - Should wait until tests are in place
+   - Depends on Issue 3 (tests) to ensure refactoring doesn't break functionality
+   - Can be done incrementally while maintaining working code
+   - Improves code quality and testability
+
+6. **Issue 6 (CSRF Protection)** - Can be done anytime after Phase 1
+   - Independent security improvement
+   - Should be done before any major form submissions are implemented
+
+### Phase 3: Polish & DevEx (Issues 7-9)
+**Goal:** Improve developer experience and code quality
+
+7. **Issue 7 (Binary Cleanup)** - Housekeeping task, can be done anytime
+   - No dependencies, purely maintenance
+   - Low impact on functionality
+
+8. **Issue 8 (CI/Pre-commit)** - Should wait until tests are solid (Issue 3)
+   - Depends on having meaningful tests to run in CI
+   - Improves development workflow but not functionality
+
+9. **Issue 9 (Template/URL Naming)** - Pure refactoring, do last
+   - No functional dependencies
+   - Cosmetic improvements that don't affect core functionality
+
+## Recommended Workflow
+
+### Week 1: Core Functionality
+- Day 1-2: Fix HF Integration (Issue 1) 
+- Day 3-4: Define Models (Issue 2)
+- Day 5: Manual testing and validation
+
+### Week 2: Quality Foundation  
+- Day 1-3: Implement Tests (Issue 3)
+- Day 4: Configuration Management (Issue 4) 
+- Day 5: CSRF Protection (Issue 6)
+
+### Week 3: Architecture & Polish
+- Day 1-2: Service Architecture (Issue 5)
+- Day 3: CI/Pre-commit Setup (Issue 8)
+- Day 4: Binary Cleanup (Issue 7)
+- Day 5: Template/URL Polish (Issue 9)
+
+## Critical Success Path
+The minimum viable improvement path is: **Issue 1 → Issue 2 → Issue 3**. This gets you from broken to working with tests. Everything else can be done iteratively as time permits.
+
+## Risk Mitigation
+- **Issue 1 is high risk** - HF API changes could cause delays. Have a backup plan to mock the service entirely if needed.
+- **Issue 3 testing** - Start simple with just one test per category, then expand.
+- **Issue 5 refactoring** - Do this incrementally to avoid breaking working code.
