@@ -7,13 +7,13 @@ Django application that converts free-form todo lists into structured schedules 
 ### Setup
 ```bash
 source venv/bin/activate
-python manage.py migrate
-python manage.py runserver
+python3 manage.py migrate
+python3 manage.py runserver
 ```
 
 ### Database Testing
 ```bash
-python manage.py shell
+python3 manage.py shell
 
 # Create test data
 from tasks.models import TaskList, Task
@@ -27,7 +27,7 @@ print(f"Created: {task}")
 # First add your Hugging Face API key to .env file:
 # HUGGINGFACE_API_KEY=your-actual-api-key-here
 
-python manage.py shell
+python3 manage.py shell
 
 # Test AI integration (will fail without valid API key)
 from tasks.services import TaskGroomer
@@ -42,7 +42,7 @@ except ValueError as e:
 ### UI Testing
 ```bash
 # Start the development server
-python manage.py runserver
+python3 manage.py runserver
 
 # Open browser to http://127.0.0.1:8000/
 # Test the form with sample data:
