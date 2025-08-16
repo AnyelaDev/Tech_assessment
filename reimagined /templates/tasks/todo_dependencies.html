@@ -27,6 +27,7 @@
     
     <div class="button-section">
         <a href="/personal-assistance/executive-function/todo-timeline/execute/{{ task_list.id }}/" class="btn-next">Next</a>
+        <a href="/personal-assistance/executive-function/todo-timeline/" class="btn-back">Back</a>
     </div>
 </div>
 
@@ -93,6 +94,9 @@
 .button-section {
     width: 100%;
     max-width: 400px;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
 }
 
 .btn-next {
@@ -112,6 +116,27 @@
 }
 
 .btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-back {
+    display: block;
+    width: 100%;
+    background: rgba(200, 200, 200, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-back:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }

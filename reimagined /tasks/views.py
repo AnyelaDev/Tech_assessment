@@ -5,6 +5,10 @@ from .services import TaskGroomer
 
 
 def home(request):
+    # Redirect to new navigation structure
+    return redirect('/personal-assistance/')
+
+def old_home(request):
     return render(request, 'tasks/home.html')
 
 

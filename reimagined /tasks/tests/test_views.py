@@ -7,13 +7,10 @@ class TestHomeView(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_home_view_renders_form(self):
+    def test_home_view_redirects_to_personal_assistance(self):
         response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'MindTimer')
-        self.assertContains(response, '<form')
-        self.assertContains(response, 'name="todo_text"')
-        self.assertContains(response, 'name="task_list_name"')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/personal-assistance/')
 
 
 class TestResultsView(TestCase):
@@ -171,3 +168,47 @@ class TestNavigationViews(TestCase):
         response = self.client.get('/personal-assistance/executive-function/')
         self.assertEqual(response.status_code, 200)
         # Test that proper context is passed for navigation
+
+    def test_executive_function_has_back_button(self):
+        response = self.client.get('/personal-assistance/executive-function/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="/personal-assistance/"')
+        self.assertContains(response, 'Back')
+
+    def test_todo_timeline_input_has_back_button(self):
+        response = self.client.get('/personal-assistance/executive-function/todo-timeline/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="/personal-assistance/executive-function/"')
+        self.assertContains(response, 'Back')
+
+    def test_dependencies_view_has_back_button(self):
+        task_list = TaskList.objects.create(
+            name="Test Tasks",
+            raw_input="Do laundry\nBuy groceries"
+        )
+        response = self.client.get(f'/personal-assistance/executive-function/todo-timeline/dependencies/{task_list.id}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="/personal-assistance/executive-function/todo-timeline/"')
+        self.assertContains(response, 'Back')
+
+    def test_timeline_execution_already_has_back_button(self):
+        task_list = TaskList.objects.create(
+            name="Test Tasks",
+            raw_input="Do laundry\nBuy groceries"
+        )
+        response = self.client.get(f'/personal-assistance/executive-function/todo-timeline/execute/{task_list.id}/')
+        self.assertEqual(response.status_code, 200)
+        # Timeline execution already has back and home buttons from our implementation
+        self.assertContains(response, 'Back')
+        self.assertContains(response, 'Home')
+
+    def test_personal_assistance_landing_no_back_button(self):
+        response = self.client.get('/personal-assistance/')
+        self.assertEqual(response.status_code, 200)
+        # Landing page should NOT have a back button
+        self.assertNotContains(response, 'Back')
+
+    def test_root_url_redirects_to_personal_assistance(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/personal-assistance/')
