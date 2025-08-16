@@ -1,0 +1,3 @@
+./misc\ clean\ merges.sh \
+"feature_branch_name" \
+"base_branch_name"
