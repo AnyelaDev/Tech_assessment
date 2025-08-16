@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}To-Do List{% endblock %}
+
+{% block content %}
+<div class="todo-container">
+    <div class="page-header">
+        <h1>To-Do List</h1>
+        <p>write your to do list.</p>
+    </div>
+    
+    <form method="post" action="/personal-assistance/executive-function/todo-timeline/process/">
+        {% csrf_token %}
+        
+        <div class="input-section">
+            <textarea id="todo_text" 
+                      name="todo_text" 
+                      placeholder="Enter your tasks here..."
+                      rows="15" 
+                      required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <input type="text" 
+                   id="task_list_name" 
+                   name="task_list_name" 
+                   placeholder="Task List Name (for development/mock only)"
+                   value="My Tasks"
+                   readonly
+                   style="background-color: #f0f0f0; cursor: not-allowed;">
+            <small style="color: #666; font-size: 0.85rem; margin-top: 5px; display: block;">
+                ⚠️ This field is currently for mock purposes only
+            </small>
+        </div>
+        
+        <div class="button-section">
+            <button type="submit" class="btn-primary">Groom my list (Mock)</button>
+            <a href="/personal-assistance/executive-function/" class="btn-back">Back</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.todo-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+form {
+    width: 100%;
+    max-width: 500px;
+}
+
+.input-section {
+    margin-bottom: 20px;
+}
+
+.input-section textarea {
+    width: 100%;
+    background: rgba(162, 210, 194, 0.8);
+    border: none;
+    border-radius: 15px;
+    padding: 30px 25px;
+    font-size: 1rem;
+    color: #333;
+    resize: vertical;
+    min-height: 300px;
+}
+
+.input-section textarea::placeholder {
+    color: #666;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 10px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.button-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-primary {
+    background: rgba(162, 210, 194, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background: rgba(181, 206, 255, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-back {
+    background: rgba(200, 200, 200, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+</style>
+{% endblock %}
