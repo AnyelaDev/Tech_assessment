@@ -14,8 +14,8 @@ cd "/home/anveg/Development/Tech_assessment/reimagined"
 Alternative if virtual environment activation works:
 ```bash
 source venv/bin/activate
-python manage.py migrate
-python manage.py runserver
+python3 manage.py migrate
+python3 manage.py runserver
 ```
 
 ### Database Testing
