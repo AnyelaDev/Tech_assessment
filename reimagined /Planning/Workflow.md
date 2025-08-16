@@ -7,3 +7,4 @@ We will start with the core function: LLM integration.
 - Stop after completing each todo item to show progress
 - Wait for user confirmation before continuing to next task
 - This allows for review and feedback at each step
+- Check Issues.md for Claude tasks in double curly brackets and execute them
