@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block title %}Timeline{% endblock %}
+
+{% block content %}
+<div class="timeline-container">
+    <div class="page-header">
+        <h1>Timeline</h1>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+        <span class="progress-start">&lt;Start time&gt;</span>
+        <span class="progress-end">&lt;Finish time&gt;</span>
+    </div>
+    
+    <div class="current-task-section">
+        {% if current_task %}
+        <div class="current-task">
+            <div class="task-badge">Now</div>
+            <div class="task-info">
+                <h3>&lt;{{ current_task.title }}&gt;</h3>
+                <p>Next: &lt;{{ current_task.title }}&gt;</p>
+            </div>
+            <div class="time-info">
+                <div>Time left:</div>
+                <div>&lt;{{ current_task.estimated_duration }}h:mm&gt;</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="parallel-section">
+        <h3>in parallel:</h3>
+        <div class="parallel-tasks">
+            {% for task in parallel_tasks %}
+            <div class="parallel-task">
+                <h4>&lt;{{ task.title }}&gt;</h4>
+                <div>Time: &lt;{{ task.estimated_duration }}h:mm&gt;</div>
+                <div>Dependencies: &lt;{% if task.dependencies %}{{ task.dependencies }}{% else %}No dependencies{% endif %}&gt;</div>
+            </div>
+            {% empty %}
+            <div class="parallel-task">
+                <h4>&lt;No parallel tasks&gt;</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="todolist-section">
+        <h3>ToDo List</h3>
+        <div class="todo-summary">
+            <div>&lt;Ordered List of groomed ToDos&gt;</div>
+            <ul>
+                {% for task in tasks %}
+                <li>{{ task.title }} ({{ task.estimated_duration }}min)</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <div class="button-section">
+        <a href="/personal-assistance/" class="btn-home">Home</a>
+        <a href="/personal-assistance/executive-function/todo-timeline/dependencies/{{ task_list.id }}/" class="btn-back">Back</a>
+    </div>
+</div>
+
+<style>
+.timeline-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.progress-bar {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 15px;
+    background: #666;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(90deg, #ff4444 0%, #666 100%);
+    border-radius: 10px;
+}
+
+.progress-start, .progress-end {
+    position: absolute;
+    top: -25px;
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.progress-start {
+    left: 0;
+}
+
+.progress-end {
+    right: 0;
+}
+
+.current-task-section {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.current-task {
+    background: rgba(162, 210, 194, 0.8);
+    border-radius: 15px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.task-badge {
+    background: #4a5568;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.task-info {
+    flex: 1;
+}
+
+.task-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.task-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.time-info {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.parallel-section {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.parallel-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.parallel-tasks {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.parallel-task {
+    background: rgba(162, 210, 194, 0.6);
+    border-radius: 12px;
+    padding: 15px 20px;
+    flex: 1;
+    min-width: 200px;
+    font-size: 0.9rem;
+}
+
+.parallel-task h4 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 1rem;
+}
+
+.todolist-section {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.todolist-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.todo-summary {
+    background: rgba(162, 210, 194, 0.8);
+    border-radius: 15px;
+    padding: 20px 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.todo-summary ul {
+    text-align: left;
+    margin-top: 15px;
+}
+
+.button-section {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-home, .btn-back {
+    background: rgba(181, 206, 255, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-home:hover, .btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<script>
+// Simple timer functionality - can be enhanced later
+document.addEventListener('DOMContentLoaded', function() {
+    // Timer logic would go here for actual countdown
+    console.log('Timeline page loaded');
+});
+</script>
+{% endblock %}
