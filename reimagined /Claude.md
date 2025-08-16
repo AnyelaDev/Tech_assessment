@@ -5,7 +5,7 @@ MindTimer is a Django-based web application that helps users convert free-form t
 
 ## Technology Stack
 - **Backend**: Python + Django
-- **Database**: SQLite (prototype) ’ PostgreSQL via Supabase (production)
+- **Database**: SQLite (prototype) ï¿½ PostgreSQL via Supabase (production)
 - **Frontend**: Django templates with minimal HTML/CSS/JavaScript
 - **AI Integration**: Hugging Face API (Mixtral-8x7B-Instruct-v0.1)
 
@@ -20,7 +20,7 @@ MindTimer is a Django-based web application that helps users convert free-form t
 1. **Input Layer**: Django HTML forms for to-do list submission
 2. **AI Processing**: Hugging Face API integration for task normalization
 3. **Planning Algorithm**: Python module for schedule optimization
-4. **Data Layer**: SQLite ’ PostgreSQL migration path
+4. **Data Layer**: SQLite ï¿½ PostgreSQL migration path
 5. **UI Layer**: Django templates with JavaScript timers
 
 ## Commands to Run
@@ -31,6 +31,7 @@ MindTimer is a Django-based web application that helps users convert free-form t
 
 ## Environment Variables
 - `HUGGINGFACE_API_KEY` - Required for AI functionality
+- `HUGGINGFACE_MODEL` - Model to use for text generation (default: meta-llama/Llama-2-7b-chat-hf)
 - `DEBUG` - Django debug mode
 - `SECRET_KEY` - Django secret key
 - `DATABASE_URL` - Database connection (when using PostgreSQL)

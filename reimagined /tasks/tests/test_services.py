@@ -18,8 +18,10 @@ class TestTaskGroomer(TestCase):
     @patch('tasks.services.InferenceClient')
     def test_task_groomer_initialization(self, mock_client):
         groomer = TaskGroomer()
-        mock_client.assert_called_once_with("mistralai/Mixtral-8x7B-Instruct-v0.1")
+        expected_model = getattr(settings, 'HUGGINGFACE_MODEL', 'google/flan-t5-base')
+        mock_client.assert_called_once_with(expected_model, token=settings.HUGGINGFACE_API_KEY)
         self.assertIsNotNone(groomer.client)
+        self.assertEqual(groomer.model, expected_model)
 
     @patch('tasks.services.InferenceClient')
     def test_groom_tasks_returns_structured_data(self, mock_client):

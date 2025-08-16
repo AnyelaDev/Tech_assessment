@@ -39,6 +39,21 @@ except ValueError as e:
     print(f"Expected error: {e}")
 ```
 
+### UI Testing
+```bash
+# Start the development server
+python manage.py runserver
+
+# Open browser to http://127.0.0.1:8000/
+# Test the form with sample data:
+# - Task List Name: "Weekend Tasks"
+# - Todo Text: "Do laundry\nBuy groceries\nClean kitchen\nCall mom"
+
+# Expected behavior:
+# - Without API key: Shows clear error message with setup instructions
+# - With valid API key: Processes tasks and shows structured results
+```
+
 ### Run Tests
 ```bash
 DJANGO_SETTINGS_MODULE=mindtimer.settings python -m pytest tasks/tests/ -v

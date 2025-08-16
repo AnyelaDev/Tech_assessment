@@ -7,6 +7,8 @@ from .models import TaskList, Task
 class TaskGroomer:
     def __init__(self):
         api_key = getattr(settings, 'HUGGINGFACE_API_KEY', None)
+        model = getattr(settings, 'HUGGINGFACE_MODEL', 'google/flan-t5-base')
+        
         if not api_key:
             raise ValueError(
                 "HUGGINGFACE_API_KEY not configured. "
@@ -15,7 +17,9 @@ class TaskGroomer:
                 "2. Uncomment and set: HUGGINGFACE_API_KEY=your_actual_api_key_here\n"
                 "3. Get your API key from: https://huggingface.co/settings/tokens"
             )
-        self.client = InferenceClient("mistralai/Mixtral-8x7B-Instruct-v0.1", token=api_key)
+        
+        self.model = model
+        self.client = InferenceClient(model, token=api_key)
 
     def groom_tasks(self, todo_text: str):
         prompt = f"""
