@@ -1,4 +1,3 @@
-import pytest
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from tasks.models import Task, TaskList, Schedule
