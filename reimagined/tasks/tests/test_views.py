@@ -362,3 +362,69 @@ class TestResetDatabaseView(TestCase):
         self.assertIn('success', response_data)
         self.assertIn('message', response_data)
         self.assertIsInstance(response_data['success'], bool)
+
+
+class TestPomodoroView(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_pomodoro_view_url_resolution(self):
+        """Test that the Pomodoro URL resolves correctly"""
+        response = self.client.get('/personal-assistance/executive-function/pomodoro/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_pomodoro_view_uses_correct_template(self):
+        """Test that the Pomodoro view uses the correct template"""
+        response = self.client.get('/personal-assistance/executive-function/pomodoro/')
+        self.assertTemplateUsed(response, 'tasks/pomodoro.html')
+
+    def test_pomodoro_view_contains_expected_content(self):
+        """Test that the Pomodoro page contains expected elements"""
+        response = self.client.get('/personal-assistance/executive-function/pomodoro/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Pomodoro Timer')
+        self.assertContains(response, 'Back')
+
+    def test_pomodoro_view_contains_timer_elements(self):
+        """Test that the Pomodoro page contains all required timer elements"""
+        response = self.client.get('/personal-assistance/executive-function/pomodoro/')
+        self.assertEqual(response.status_code, 200)
+        
+        # Timer display elements
+        self.assertContains(response, 'id="timerDisplay"')
+        self.assertContains(response, 'id="timerText"')
+        self.assertContains(response, 'id="timerDuration"')
+        self.assertContains(response, 'id="progressBar"')
+        
+        # Timer control buttons
+        self.assertContains(response, 'id="startBtn"')
+        self.assertContains(response, 'id="pauseBtn"')
+        self.assertContains(response, 'id="resetBtn"')
+        self.assertContains(response, 'id="stopBtn"')
+        
+        # Configuration inputs
+        self.assertContains(response, 'id="workDuration"')
+        self.assertContains(response, 'id="breakDuration"')
+
+    def test_pomodoro_view_has_back_button(self):
+        """Test that the Pomodoro page has a back button to executive function"""
+        response = self.client.get('/personal-assistance/executive-function/pomodoro/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="/personal-assistance/executive-function/"')
+        self.assertContains(response, 'btn-back')
+
+    def test_pomodoro_view_contains_javascript_timer_class(self):
+        """Test that the Pomodoro page includes the PomodoroTimer JavaScript class"""
+        response = self.client.get('/personal-assistance/executive-function/pomodoro/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class PomodoroTimer')
+        self.assertContains(response, 'DOMContentLoaded')
+
+    def test_pomodoro_view_url_name_reverse(self):
+        """Test that the URL name can be reversed correctly"""
+        from django.urls import reverse
+        url = reverse('pomodoro')
+        self.assertEqual(url, '/personal-assistance/executive-function/pomodoro/')
+        
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
