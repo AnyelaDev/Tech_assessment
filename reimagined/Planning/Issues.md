@@ -12,62 +12,10 @@ To create issue{{
 }}
 
 ---
-# Issues in GitHub
-
-## Issue #1 ✅ CLOSED
-**Title:** LLM Service
-
-**Description:** Initial AI integration for intelligent task breakdown and analysis.
-
-**Resolution:** Successfully implemented Claude Sonnet 3.5 integration with comprehensive testing:
-- [x] Claude API integration with error handling
-- [x] Intelligent task breakdown from free-form text
-- [x] Priority assignment and time estimation
-- [x] Task dependency management
-- [x] Modern UI with table display and analysis
-- [x] Comprehensive test suite (unit/integration/e2e)
-- [x] Database model enhancements (task_id, priority fields)
-- [x] Cost protection system with --AItest-ON flag
-
-**Impact:** High
-**Priority:** High
-
-## Issue 6 ✅ CLOSED
-**Title:** Define Minimal Models Explicitly
-
-**Description:** Task and TaskList models need clear structure and validation to support the core functionality.
-
-**Resolution:** Successfully implemented comprehensive model enhancements and UI fixes:
-- [x] TaskList model supports todo_text and context inputs (no name required)
-- [x] Task model with task_list FK, title, estimated_duration, can_run_parallel
-- [x] Fix task_id generation: program-controlled 4-byte hex format
-- [x] Add proper model validation: required fields, circular dependency prevention
-- [x] Fix dependencies display in UI: show dependent task IDs instead of "Task.None"
-- [x] Add dependency management: 0000 removes, valid hex adds (max 4 dependencies)
-
-**Impact:** Medium
-**Priority:** High
-
-## Issue 7
-**Title:** Add Context Field for Enhanced AI Processing
-
-**Description:** Users need ability to provide additional context to improve AI task grooming accuracy.
-
-**Acceptance criteria:**
-- [x] Add optional context textarea field to todo timeline input form
-- [x] Update view to handle context parameter from form submission
-- [x] Connect context to TaskGroomer service and Claude API calls
-- [x] Include context in LLM prompt for better task analysis
-- [x] Preserve context in error responses for better UX
-
-**Impact:** Medium
-**Priority:** Medium
-
-
 ---
 # List of issues not created yet. 
 
-## Issue B
+## Issue 8
 **Title:** Implement Meaningful Tests (Currently Mostly Placeholders)
 
 **Description:** Tests exist as scaffolding but lack meaningful assertions and behavior validation.
@@ -82,7 +30,7 @@ To create issue{{
 **Impact:** High
 **Priority:** Medium
 
-## Issue C
+## Issue 9
 **Title:** Improve Configuration Management and Security
 
 **Description:** Secrets are coupled to Django settings and need better management to avoid exposure.
@@ -96,7 +44,7 @@ To create issue{{
 **Impact:** High
 **Priority:** Medium
 
-## Issue D
+## Issue 10
 **Title:** Improve Service Architecture and Boundaries
 
 **Description:** TaskGroomer service needs better separation of concerns and dependency injection.
@@ -110,7 +58,7 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Medium
 
-## Issue E
+## Issue 11
 **Title:** Add Security Headers and CSRF Protection
 
 **Description:** As forms start mutating state, proper security measures need to be in place.
@@ -123,7 +71,7 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Medium
 
-## Issue F
+## Issue 12
 **Title:** Remove Binary Artifacts from Git History
 
 **Description:** SQLite DB and potentially large PNG mockups are committed to repository history.
@@ -136,7 +84,7 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Low
 
-## Issue G
+## Issue 13
 **Title:** Add Pre-commit Hooks and CI
 
 **Description:** Repository lacks automated code quality checks and continuous integration.
@@ -150,7 +98,7 @@ To create issue{{
 **Impact:** Low
 **Priority:** Low
 
-## Issue H
+## Issue 14
 **Title:** Improve Template Naming and URL Design
 
 **Description:** Templates and URLs could follow more consistent patterns.
@@ -195,37 +143,37 @@ This plan follows a logical sequence that builds core functionality first, then 
 ### Phase 2: Quality & Architecture (Issues B-E)
 **Goal:** Build additional reliability, security, and maintainable architecture
 
-3. **Issue B (Tests) ✅ LARGELY COMPLETED** - Comprehensive test suite already implemented
+3. **Issue 8 (Tests) ✅ LARGELY COMPLETED** - Comprehensive test suite already implemented
    - ✅ Working Claude integration testing with cost protection
    - ✅ Unit/integration/e2e test structure in place
    - May need minor enhancements for specific edge cases
 
-4. **Issue C (Configuration)** - Can be done in parallel with other work
+4. **Issue 9 (Configuration)** - Can be done in parallel with other work
    - Independent task that improves security
    - Makes the app more production-ready
    - No blocking dependencies
 
-5. **Issue D (Service Architecture)** - Current architecture is solid but could be enhanced
+5. **Issue 10 (Service Architecture)** - Current architecture is solid but could be enhanced
    - Current ClaudeTaskGroomer service works well
    - Can be done incrementally while maintaining working code
    - Improves code quality and testability
 
-6. **Issue E (CSRF Protection)** - Can be done anytime
+6. **Issue 11 (CSRF Protection)** - Can be done anytime
    - Independent security improvement
    - Should be done before any major form submissions are implemented
 
 ### Phase 3: Polish & DevEx (Issues F-H)
 **Goal:** Improve developer experience and code quality
 
-7. **Issue F (Binary Cleanup)** - Housekeeping task, can be done anytime
+7. **Issue 12 (Binary Cleanup)** - Housekeeping task, can be done anytime
    - No dependencies, purely maintenance
    - Low impact on functionality
 
-8. **Issue G (CI/Pre-commit)** - Can be implemented now that tests are solid
+8. **Issue 13 (CI/Pre-commit)** - Can be implemented now that tests are solid
    - ✅ Meaningful tests exist to run in CI
    - Improves development workflow but not functionality
 
-9. **Issue H (Template/URL Naming)** - Pure refactoring, do last
+9. **Issue 14 (Template/URL Naming)** - Pure refactoring, do last
    - No functional dependencies
    - Cosmetic improvements that don't affect core functionality
 
@@ -238,20 +186,20 @@ This plan follows a logical sequence that builds core functionality first, then 
 - ✅ Day 6: Context field integration (Issue 7) - Enhanced AI processing
 
 ### Week 2: Additional Quality Foundation  
-- Day 1-3: Enhanced Tests (Issue B) - minor additions if needed
-- Day 4: Configuration Management (Issue C) 
-- Day 5: CSRF Protection (Issue E)
+- Day 1-3: Enhanced Tests (Issue 8) - minor additions if needed
+- Day 4: Configuration Management (Issue 9) 
+- Day 5: CSRF Protection (Issue 11)
 
 ### Week 3: Architecture & Polish
-- Day 1-2: Service Architecture (Issue D)
-- Day 3: CI/Pre-commit Setup (Issue G)
-- Day 4: Binary Cleanup (Issue F)
-- Day 5: Template/URL Polish (Issue H)
+- Day 1-2: Service Architecture (Issue 10)
+- Day 3: CI/Pre-commit Setup (Issue 13)
+- Day 4: Binary Cleanup (Issue 12)
+- Day 5: Template/URL Polish (Issue 14)
 
 ## Critical Success Path
-The minimum viable improvement path was: **Issue 1 → Issue 6 → Issue 7 → Issue B**. ✅ **This has been completed** - we went from broken to working with comprehensive tests and enhanced AI processing. Everything else can be done iteratively as time permits.
+The minimum viable improvement path was: **Issue 1 → Issue 6 → Issue 7 → Issue 8**. ✅ **This has been completed** - we went from broken to working with comprehensive tests and enhanced AI processing. Everything else can be done iteratively as time permits.
 
 ## Risk Mitigation
 - ✅ **Issue 1 risk resolved** - Claude API integration is stable and working
-- ✅ **Issue B testing completed** - Comprehensive test suite with 20+ tests implemented
-- **Issue D refactoring** - Do this incrementally to avoid breaking working code.
+- ✅ **Issue 8 testing completed** - Comprehensive test suite with 20+ tests implemented
+- **Issue 10 refactoring** - Do this incrementally to avoid breaking working code.
