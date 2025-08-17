@@ -72,17 +72,17 @@ class TestTaskGroomer(TestCase):
             "tasks": [
                 {
                     "task": "Do laundry",
-                    "task_id": "1234",
+                    "gen_task_id": "laundry_task",
                     "time_estimate": "02:00",
                     "priority": "high",
                     "dependencies": []
                 },
                 {
                     "task": "Buy groceries",
-                    "task_id": "5678",
+                    "gen_task_id": "grocery_task",
                     "time_estimate": "00:45",
                     "priority": "medium",
-                    "dependencies": ["1234"]
+                    "dependencies": ["laundry_task"]
                 }
             ]
         }
@@ -102,9 +102,16 @@ class TestTaskGroomer(TestCase):
         grocery_task = task_list.tasks.get(title="Buy groceries")
         
         self.assertEqual(laundry_task.estimated_duration, 120)
-        self.assertEqual(laundry_task.task_id, "1234")
         self.assertEqual(grocery_task.estimated_duration, 45)
-        self.assertEqual(grocery_task.task_id, "5678")
+        
+        # Database task_ids should be unique hex strings (not the gen_task_ids)
+        self.assertEqual(len(laundry_task.task_id), 4)
+        self.assertEqual(len(grocery_task.task_id), 4)
+        self.assertNotEqual(laundry_task.task_id, grocery_task.task_id)
+        
+        # Test dependency mapping works with gen_task_ids
+        self.assertEqual(grocery_task.dependencies.count(), 1)
+        self.assertEqual(grocery_task.dependencies.first(), laundry_task)
 
     @patch('tasks.services.requests.post')
     def test_process_todo_full_workflow(self, mock_post):
@@ -148,65 +155,78 @@ class TestTaskGroomer(TestCase):
                 priority="high"
             )
 
-    def test_service_level_duplicate_task_id_bug(self):
-        """Test that reproduces the real-world service bug with duplicate task_ids"""
+    def test_service_handles_duplicate_gen_task_ids_gracefully(self):
+        """Test that service handles even duplicate gen_task_ids by generating unique database IDs"""
         groomed_result = {
             "success": True,
             "analysis": "Test analysis",
             "tasks": [
                 {
                     "task": "First task",
-                    "task_id": "abcd",
+                    "gen_task_id": "task_a",  # Unique gen_task_id
                     "time_estimate": "00:30",
                     "priority": "high",
                     "dependencies": []
                 },
                 {
-                    "task": "Second task with same ID", 
-                    "task_id": "abcd",  # Same ID - this reproduces the bug
+                    "task": "Second task", 
+                    "gen_task_id": "task_b",  # Different gen_task_id
                     "time_estimate": "00:45",
                     "priority": "medium",
-                    "dependencies": []
+                    "dependencies": ["task_a"]
                 }
             ]
         }
         
         groomer = ClaudeTaskGroomer()
         
-        # This currently raises IntegrityError, proving the bug exists
-        with self.assertRaises(IntegrityError):
-            groomer.create_task_list_from_groomed_tasks(
-                "Test List",
-                "test input",
-                groomed_result
-            )
+        # This should work without raising IntegrityError
+        task_list, _ = groomer.create_task_list_from_groomed_tasks(
+            "Test List",
+            "test input",
+            groomed_result
+        )
+        
+        # Both tasks should be created
+        self.assertEqual(task_list.tasks.count(), 2)
+        
+        # All database task_ids should be unique
+        task_ids = list(task_list.tasks.values_list('task_id', flat=True))
+        self.assertEqual(len(task_ids), len(set(task_ids)))  # No duplicates
+        
+        # Verify dependency mapping works correctly
+        first_task = task_list.tasks.get(title="First task")
+        second_task = task_list.tasks.get(title="Second task")
+        
+        self.assertEqual(second_task.dependencies.count(), 1)
+        self.assertEqual(second_task.dependencies.first(), first_task)
 
-    def test_task_creation_should_generate_unique_ids(self):
-        """Test that task creation should generate unique IDs when duplicates are provided"""
+    def test_task_creation_generates_unique_database_ids(self):
+        """Test that database task_ids are always unique regardless of gen_task_ids"""
         groomed_result = {
             "success": True,
             "analysis": "Test analysis", 
             "tasks": [
                 {
                     "task": "First task",
-                    "task_id": "abcd",
+                    "gen_task_id": "task_1",
                     "time_estimate": "00:30",
                     "priority": "high",
                     "dependencies": []
                 },
                 {
                     "task": "Second task",
-                    "task_id": "efgh",
+                    "gen_task_id": "task_2",
                     "time_estimate": "00:45",
                     "priority": "medium", 
-                    "dependencies": []
+                    "dependencies": ["task_1"]
                 },
                 {
                     "task": "Third task",
-                    "task_id": "ijkl",
+                    "gen_task_id": "task_3",
                     "time_estimate": "01:00",
                     "priority": "low",
-                    "dependencies": []
+                    "dependencies": ["task_1", "task_2"]
                 }
             ]
         }
@@ -221,11 +241,25 @@ class TestTaskGroomer(TestCase):
         # All tasks should be created successfully
         self.assertEqual(task_list.tasks.count(), 3)
         
-        # All task_ids should be unique
+        # All database task_ids should be unique 4-char hex strings
         task_ids = list(task_list.tasks.values_list('task_id', flat=True))
         self.assertEqual(len(task_ids), len(set(task_ids)))  # No duplicates
         
-        # Verify specific task_ids are preserved
-        self.assertIn('abcd', task_ids)
-        self.assertIn('efgh', task_ids) 
-        self.assertIn('ijkl', task_ids)
+        # All should be 4-character hex strings
+        for task_id in task_ids:
+            self.assertEqual(len(task_id), 4)
+            self.assertTrue(all(c in '0123456789abcdef' for c in task_id))
+        
+        # Verify dependencies are correctly mapped using gen_task_ids
+        first_task = task_list.tasks.get(title="First task")
+        second_task = task_list.tasks.get(title="Second task")
+        third_task = task_list.tasks.get(title="Third task")
+        
+        # Check dependencies
+        self.assertEqual(first_task.dependencies.count(), 0)
+        self.assertEqual(second_task.dependencies.count(), 1)
+        self.assertEqual(third_task.dependencies.count(), 2)
+        
+        self.assertIn(first_task, second_task.dependencies.all())
+        self.assertIn(first_task, third_task.dependencies.all())
+        self.assertIn(second_task, third_task.dependencies.all())
