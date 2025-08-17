@@ -32,10 +32,7 @@ To create issue{{
 **Impact:** High
 **Priority:** High
 
----
-# List of issues not created yet. 
-
-## Issue A
+## Issue 6
 **Title:** Define Minimal Models Explicitly
 
 **Description:** Task and TaskList models need clear structure and validation to support the core functionality.
@@ -48,6 +45,10 @@ To create issue{{
 
 **Impact:** Medium
 **Priority:** High
+
+
+---
+# List of issues not created yet. 
 
 ## Issue B
 **Title:** Implement Meaningful Tests (Currently Mostly Placeholders)
@@ -152,7 +153,7 @@ To create issue{{
 
 This plan follows a logical sequence that builds core functionality first, then adds quality and security layers, and finally polishes the application.
 
-### Phase 1: Core Foundation (Issue 1 ✅ + Issue A)
+### Phase 1: Core Foundation (Issue 1 ✅ + Issue 6)
 **Goal:** Get the basic functionality working end-to-end
 
 1. **Issue 1 (LLM Service) ✅ COMPLETED** - This critical blocker has been resolved with Claude Sonnet integration.
@@ -160,12 +161,12 @@ This plan follows a logical sequence that builds core functionality first, then 
    - ✅ Created comprehensive test suite with proper organization
    - ✅ This enabled all subsequent development work
 
-2. **Issue A (Models)** - Define enhanced data structure for remaining features
+2. **Issue 6 (Models)** - Define enhanced data structure for remaining features
    - TaskList and Task models may need further enhancements
    - Required for any additional features beyond current implementation
    - Current models are functional but could be extended
 
-**Dependencies:** Issue 1 is completed. Issue A can be developed independently.
+**Dependencies:** Issue 1 is completed. Issue 6 can be developed independently.
 
 ### Phase 2: Quality & Architecture (Issues B-E)
 **Goal:** Build additional reliability, security, and maintainable architecture
@@ -223,7 +224,7 @@ This plan follows a logical sequence that builds core functionality first, then 
 - Day 5: Template/URL Polish (Issue H)
 
 ## Critical Success Path
-The minimum viable improvement path was: **Issue 1 → Issue A → Issue B**. ✅ **This has been completed** - we went from broken to working with comprehensive tests. Everything else can be done iteratively as time permits.
+The minimum viable improvement path was: **Issue 1 → Issue 6 → Issue B**. ✅ **This has been completed** - we went from broken to working with comprehensive tests. Everything else can be done iteratively as time permits.
 
 ## Risk Mitigation
 - ✅ **Issue 1 risk resolved** - Claude API integration is stable and working
