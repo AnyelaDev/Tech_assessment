@@ -126,20 +126,3 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Medium
 
-## Issue 19
-**Title:** Implement Pomodoro Timer Screen
-
-**Description:** Add a Pomodoro timer functionality to the executive function page that guides users through work and break cycles with visual feedback.
-
-**Acceptance criteria:**
-- [ ] Add Pomodoro button to executive function page (http://127.0.0.1:8000/personal-assistance/executive-function/)
-- [ ] Implement work timer: 5-second countdown with progress bar
-- [ ] Create break screen: dark blue background with white "Time for a break" text and "Start Break" button
-- [ ] Implement break timer: 5-second countdown with progress bar  
-- [ ] Create restart screen: white background with teal "New pomodoro?" text and "Start Pomodoro" button
-- [ ] Ensure seamless cycle transitions and timer accuracy
-- [ ] Add proper CSS styling for different screen states
-- [ ] Test timer functionality and visual transitions
-
-**Impact:** Medium
-**Priority:** Medium

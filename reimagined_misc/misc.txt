@@ -1,5 +1,5 @@
 ./misc\ clean\ merges.sh \
-"Issue-18-Add-Database-Reset-Button-to-Personal-Assistance-Page" \
+"Feature" \
 "master"
 
 
