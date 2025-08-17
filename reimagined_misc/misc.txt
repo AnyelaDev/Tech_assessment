@@ -4,9 +4,12 @@
 
 
 
-read the files in the planning folder. pay attention to the workflow bits. We are going to use that to fix Issue xx. Think about the scope of the fix and any aspects not cleared from the Issue documentation. What questions should we answer before we start the work?
+read the files in the planning folder /home/anveg/Development/Tech_assessment/reimagined/Planning. pay attention to the workflow bits. 
+
+We are going to use that to fix Issue xx. Think about the scope of the fix and any aspects not cleared from the Issue documentation. What questions should we answer before we start the work?
 
 
 
 Remember, Tdd with meaningful tests only.
 
+Issue is fixed. Read Claude.md and remember how to write changelog in the readme. Enter the issue fix in the readme. 

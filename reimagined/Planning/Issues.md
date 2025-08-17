@@ -126,18 +126,20 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Medium
 
-## Issue 17
-**Title:** Change Color in UI for Items with No Dependencies
+## Issue 19
+**Title:** Implement Pomodoro Timer Screen
 
-**Description:** Improve visual distinction in the UI by applying different colors to tasks that have no dependencies to make them more easily identifiable.
+**Description:** Add a Pomodoro timer functionality to the executive function page that guides users through work and break cycles with visual feedback.
 
 **Acceptance criteria:**
-- [x] Identify tasks with no dependencies in template logic
-- [x] Apply different CSS styling/color for tasks without dependencies
-- [x] Ensure color contrast meets accessibility standards
-- [x] Update UI to clearly distinguish independent tasks
-- [x] Test visual changes across different screen sizes
+- [ ] Add Pomodoro button to executive function page (http://127.0.0.1:8000/personal-assistance/executive-function/)
+- [ ] Implement work timer: 5-second countdown with progress bar
+- [ ] Create break screen: dark blue background with white "Time for a break" text and "Start Break" button
+- [ ] Implement break timer: 5-second countdown with progress bar  
+- [ ] Create restart screen: white background with teal "New pomodoro?" text and "Start Pomodoro" button
+- [ ] Ensure seamless cycle transitions and timer accuracy
+- [ ] Add proper CSS styling for different screen states
+- [ ] Test timer functionality and visual transitions
 
-**Impact:** Low
-**Priority:** Low
-
+**Impact:** Medium
+**Priority:** Medium
