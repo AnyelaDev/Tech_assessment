@@ -38,10 +38,12 @@ To create issue{{
 **Description:** Task and TaskList models need clear structure and validation to support the core functionality.
 
 **Acceptance criteria:**
-- [ ] Create TaskList model (name, raw_input, created_at)
-- [ ] Create Task model (task_list FK, title, estimated_minutes, can_overlap)
-- [ ] Add proper model validation
-- [ ] Consider depends_on M2M relationship for future
+- [ ] TaskList model supports todo_text and context inputs (no name required)
+- [ ] Task model with task_list FK, title, estimated_duration, can_run_parallel
+- [ ] Fix task_id generation: program-controlled 4-byte hex format
+- [ ] Add proper model validation: required fields, circular dependency prevention
+- [ ] Fix dependencies display in UI: show dependent task IDs instead of "Task.None"
+- [ ] Add dependency management: 0000 removes, valid hex adds (max 4 dependencies)
 
 **Impact:** Medium
 **Priority:** High
