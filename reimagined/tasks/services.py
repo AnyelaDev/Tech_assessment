@@ -46,11 +46,13 @@ Additional context: {context if context else "No additional context provided"}
 Please provide:
 1. A list of actionable tasks derived from the original todo in the form of a JSON array. each object in the array should have:
    - "task": the reworded task
-   - "task_id": a unique identifier for the task, which should be a hexadecimal string of 4 bytes
+   - "gen_task_id": a unique identifier for this task that you generate (use any format you want - letters, numbers, etc.). This is only for mapping dependencies within this response.
    - "time_estimate": a realistic time estimate for completion (in hh:mm format). time estimates should be realistic and not too short
-   - "dependencies": an array of tasks_id that are blocked if this one is not done yet (if any)
+   - "dependencies": an array of gen_task_id values that this task depends on (if any)
    - "priority": a priority level (low, medium, high)
 2. A brief analysis of the original todo text, explaining the breakdown and reasoning behind the tasks. as concise as possible.
+
+IMPORTANT: Make sure all gen_task_id values are unique within your response, as they will be used to map task dependencies.
 
 Format your response as a JSON.
 """
@@ -126,6 +128,32 @@ Format your response as a JSON.
             # Default to 30 minutes if parsing fails
             return 30
 
+    def generate_unique_db_task_id(self, used_ids: set) -> str:
+        """Generate a unique 4-character hex task_id for database storage"""
+        import secrets
+        
+        while True:
+            new_id = secrets.token_hex(2)  # 2 bytes = 4 hex chars
+            if new_id not in used_ids and not Task.objects.filter(task_id=new_id).exists():
+                return new_id
+
+    def ensure_unique_task_id(self, proposed_id: str, used_ids: set) -> str:
+        """DEPRECATED: Kept for backward compatibility with existing tests"""
+        import secrets
+        import re
+        
+        # Validate format of proposed_id
+        if proposed_id and re.match(r'^[0-9a-fA-F]{4}$', proposed_id):
+            # Check if it's unique within this batch and globally
+            if proposed_id not in used_ids and not Task.objects.filter(task_id=proposed_id).exists():
+                return proposed_id
+        
+        # Generate a new unique task_id
+        while True:
+            new_id = secrets.token_hex(2)  # 2 bytes = 4 hex chars
+            if new_id not in used_ids and not Task.objects.filter(task_id=new_id).exists():
+                return new_id
+
     def create_task_list_from_groomed_tasks(self, name: str, raw_input: str, groomed_result: dict):
         task_list = TaskList.objects.create(
             name=name,
@@ -138,27 +166,39 @@ Format your response as a JSON.
         tasks_data = groomed_result.get("tasks", [])
         
         # Create tasks first
-        created_tasks = {}
+        used_task_ids = set()
+        gen_id_to_task_mapping = {}  # Map AI's gen_task_id to our Task objects
+        
         for task_data in tasks_data:
             duration = self.parse_time_estimate(task_data.get("time_estimate", "00:30"))
+            gen_task_id = task_data.get("gen_task_id", "unknown")  # AI's reference ID
+            
+            # Generate a unique database task_id (independent of AI's gen_task_id)
+            final_task_id = self.generate_unique_db_task_id(used_task_ids)
+            used_task_ids.add(final_task_id)
+            
             task = Task.objects.create(
                 title=task_data.get("task", "Untitled Task"),
                 description=task_data.get("task", "Untitled Task"),
-                task_id=task_data.get("task_id", "00000000"),
+                task_id=final_task_id,
                 priority=task_data.get("priority", "medium"),
                 estimated_duration=duration,
                 task_list=task_list
             )
-            created_tasks[task_data.get("task_id", "00000000")] = task
+            
+            # Map AI's gen_task_id to our created Task object
+            gen_id_to_task_mapping[gen_task_id] = task
         
-        # Set up dependencies after all tasks are created
+        # Set up dependencies using AI's gen_task_id system
         for task_data in tasks_data:
-            task_id = task_data.get("task_id", "00000000")
-            if task_id in created_tasks and task_data.get("dependencies"):
-                task = created_tasks[task_id]
-                for dep_id in task_data["dependencies"]:
-                    if dep_id in created_tasks:
-                        task.dependencies.add(created_tasks[dep_id])
+            gen_task_id = task_data.get("gen_task_id", "unknown")
+            
+            if gen_task_id in gen_id_to_task_mapping and task_data.get("dependencies"):
+                task = gen_id_to_task_mapping[gen_task_id]
+                for gen_dep_id in task_data["dependencies"]:
+                    if gen_dep_id in gen_id_to_task_mapping:
+                        dependency_task = gen_id_to_task_mapping[gen_dep_id]
+                        task.dependencies.add(dependency_task)
         
         return task_list, groomed_result.get("analysis", "")
 
