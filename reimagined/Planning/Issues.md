@@ -126,18 +126,3 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Medium
 
-## Issue 17
-**Title:** Change Color in UI for Items with No Dependencies
-
-**Description:** Improve visual distinction in the UI by applying different colors to tasks that have no dependencies to make them more easily identifiable.
-
-**Acceptance criteria:**
-- [x] Identify tasks with no dependencies in template logic
-- [x] Apply different CSS styling/color for tasks without dependencies
-- [x] Ensure color contrast meets accessibility standards
-- [x] Update UI to clearly distinguish independent tasks
-- [x] Test visual changes across different screen sizes
-
-**Impact:** Low
-**Priority:** Low
-
