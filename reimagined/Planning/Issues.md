@@ -32,22 +32,40 @@ To create issue{{
 **Impact:** High
 **Priority:** High
 
----
-# List of issues not created yet. 
-
-## Issue A
+## Issue 6 ✅ CLOSED
 **Title:** Define Minimal Models Explicitly
 
 **Description:** Task and TaskList models need clear structure and validation to support the core functionality.
 
-**Acceptance criteria:**
-- [ ] Create TaskList model (name, raw_input, created_at)
-- [ ] Create Task model (task_list FK, title, estimated_minutes, can_overlap)
-- [ ] Add proper model validation
-- [ ] Consider depends_on M2M relationship for future
+**Resolution:** Successfully implemented comprehensive model enhancements and UI fixes:
+- [x] TaskList model supports todo_text and context inputs (no name required)
+- [x] Task model with task_list FK, title, estimated_duration, can_run_parallel
+- [x] Fix task_id generation: program-controlled 4-byte hex format
+- [x] Add proper model validation: required fields, circular dependency prevention
+- [x] Fix dependencies display in UI: show dependent task IDs instead of "Task.None"
+- [x] Add dependency management: 0000 removes, valid hex adds (max 4 dependencies)
 
 **Impact:** Medium
 **Priority:** High
+
+## Issue 7
+**Title:** Add Context Field for Enhanced AI Processing
+
+**Description:** Users need ability to provide additional context to improve AI task grooming accuracy.
+
+**Acceptance criteria:**
+- [x] Add optional context textarea field to todo timeline input form
+- [x] Update view to handle context parameter from form submission
+- [x] Connect context to TaskGroomer service and Claude API calls
+- [x] Include context in LLM prompt for better task analysis
+- [x] Preserve context in error responses for better UX
+
+**Impact:** Medium
+**Priority:** Medium
+
+
+---
+# List of issues not created yet. 
 
 ## Issue B
 **Title:** Implement Meaningful Tests (Currently Mostly Placeholders)
@@ -152,7 +170,7 @@ To create issue{{
 
 This plan follows a logical sequence that builds core functionality first, then adds quality and security layers, and finally polishes the application.
 
-### Phase 1: Core Foundation (Issue 1 ✅ + Issue A)
+### Phase 1: Core Foundation (Issue 1 ✅ + Issue 6 ✅ + Issue 7 ✅)
 **Goal:** Get the basic functionality working end-to-end
 
 1. **Issue 1 (LLM Service) ✅ COMPLETED** - This critical blocker has been resolved with Claude Sonnet integration.
@@ -160,12 +178,19 @@ This plan follows a logical sequence that builds core functionality first, then 
    - ✅ Created comprehensive test suite with proper organization
    - ✅ This enabled all subsequent development work
 
-2. **Issue A (Models)** - Define enhanced data structure for remaining features
-   - TaskList and Task models may need further enhancements
-   - Required for any additional features beyond current implementation
-   - Current models are functional but could be extended
+2. **Issue 6 (Models) ✅ COMPLETED** - Enhanced data structure implemented
+   - ✅ Task and TaskList models with proper validation
+   - ✅ 4-byte hex task_id generation system
+   - ✅ Circular dependency prevention
+   - ✅ UI dependency display fixes
+   - ✅ Comprehensive dependency management
 
-**Dependencies:** Issue 1 is completed. Issue A can be developed independently.
+3. **Issue 7 (Context Field) ✅ COMPLETED** - Enhanced AI processing capability
+   - ✅ Optional context field in UI
+   - ✅ Full integration with Claude API
+   - ✅ Improved task grooming accuracy
+
+**Dependencies:** All Phase 1 issues completed successfully.
 
 ### Phase 2: Quality & Architecture (Issues B-E)
 **Goal:** Build additional reliability, security, and maintainable architecture
@@ -208,8 +233,9 @@ This plan follows a logical sequence that builds core functionality first, then 
 
 ### Week 1: Core Functionality ✅ COMPLETED
 - ✅ Day 1-2: LLM Integration (Issue 1) - Claude Sonnet implemented
-- ✅ Day 3-4: Enhanced Models - task_id, priority fields added
+- ✅ Day 3-4: Enhanced Models (Issue 6) - task_id, priority fields, validation added
 - ✅ Day 5: Comprehensive testing and validation completed
+- ✅ Day 6: Context field integration (Issue 7) - Enhanced AI processing
 
 ### Week 2: Additional Quality Foundation  
 - Day 1-3: Enhanced Tests (Issue B) - minor additions if needed
@@ -223,7 +249,7 @@ This plan follows a logical sequence that builds core functionality first, then 
 - Day 5: Template/URL Polish (Issue H)
 
 ## Critical Success Path
-The minimum viable improvement path was: **Issue 1 → Issue A → Issue B**. ✅ **This has been completed** - we went from broken to working with comprehensive tests. Everything else can be done iteratively as time permits.
+The minimum viable improvement path was: **Issue 1 → Issue 6 → Issue 7 → Issue B**. ✅ **This has been completed** - we went from broken to working with comprehensive tests and enhanced AI processing. Everything else can be done iteratively as time permits.
 
 ## Risk Mitigation
 - ✅ **Issue 1 risk resolved** - Claude API integration is stable and working

@@ -12,12 +12,12 @@
     <div class="tasks-section">
         {% for task in tasks %}
         <div class="task-card">
-            <h3>&lt;{{ task.title }}&gt;</h3>
+            <h3>[{{ task.task_id }}] &lt;{{ task.title }}&gt;</h3>
             <div class="task-detail">
                 <strong>Time:</strong> &lt;{{ task.estimated_duration }} minutes&gt;
             </div>
             <div class="task-detail">
-                <strong>Dependencies:</strong> &lt;{% if task.dependencies %}{{ task.dependencies }}{% else %}No dependencies{% endif %}&gt;
+                <strong>Dependencies:</strong> &lt;{{ task.get_dependency_display }}&gt;
             </div>
         </div>
         {% empty %}

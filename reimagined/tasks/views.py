@@ -43,6 +43,7 @@ def process_todo_timeline(request):
     
     task_list_name = request.POST.get('task_list_name', 'My Tasks').strip()
     todo_text = request.POST.get('todo_text', '').strip()
+    context = request.POST.get('context', '').strip()
     
     if not todo_text:
         return render(request, 'tasks/todo_timeline_input.html', {
@@ -51,13 +52,14 @@ def process_todo_timeline(request):
     
     try:
         groomer = TaskGroomer()
-        task_list, analysis = groomer.process_todo(task_list_name, todo_text)
+        task_list, analysis = groomer.process_todo(task_list_name, todo_text, context=context)
         request.session['analysis'] = analysis
         return redirect('todo_dependencies', task_list_id=task_list.id)
     except ValueError as e:
         return render(request, 'tasks/todo_timeline_input.html', {
             'error': str(e),
-            'todo_text': todo_text
+            'todo_text': todo_text,
+            'context': context
         })
 
 
