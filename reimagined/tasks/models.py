@@ -16,8 +16,16 @@ class TaskList(models.Model):
 
 
 class Task(models.Model):
+    PRIORITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ]
+    
     title = models.CharField(max_length=200)
     description = models.TextField()
+    task_id = models.CharField(max_length=8, help_text="Unique hexadecimal task identifier", default="00000000")
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
     estimated_duration = models.PositiveIntegerField(help_text="Duration in minutes")
     completed = models.BooleanField(default=False)
     task_list = models.ForeignKey(TaskList, related_name='tasks', on_delete=models.CASCADE, null=True, blank=True)
