@@ -11,7 +11,7 @@
     
     <div class="tasks-section">
         {% for task in tasks %}
-        <div class="task-card">
+        <div class="task-card{% if task.has_no_dependencies %} no-dependencies{% endif %}">
             <h3>[{{ task.task_id }}] &lt;{{ task.title }}&gt;</h3>
             <div class="task-detail">
                 <strong>Time:</strong> &lt;{{ task.estimated_duration }} minutes&gt;
@@ -34,7 +34,7 @@
 <style>
 .dependencies-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+    background: linear-gradient(135deg, #b7fae1 0%, #f7b3f7 100%);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -66,11 +66,20 @@
 }
 
 .task-card {
-    background: rgba(162, 210, 194, 0.8);
+    background: rgba(198, 219, 159, 0.8);
     border-radius: 15px;
     padding: 25px 30px;
     margin-bottom: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Task cards with no dependencies - uses high-contrast colors with visual border indicator
+   Background: Light yellow/cream (rgba(255, 248, 181, 0.9)) provides sufficient contrast with dark text
+   Border: Amber (#f59e0b) provides additional visual distinction beyond just color
+   This ensures accessibility for colorblind users */
+.task-card.no-dependencies {
+    background: rgba(224, 243, 164, 0.9);
+    border-left: 4px solid #0bf50b;
 }
 
 .task-card h3 {

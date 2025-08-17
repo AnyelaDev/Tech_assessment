@@ -132,6 +132,10 @@ class Task(models.Model):
         if not deps:
             return "None"
         return ", ".join(deps)
+    
+    def has_no_dependencies(self):
+        """Return True if task has no dependencies"""
+        return self.dependencies.count() == 0
 
 
 class Schedule(models.Model):

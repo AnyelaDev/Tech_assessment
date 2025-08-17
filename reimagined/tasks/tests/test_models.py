@@ -42,6 +42,45 @@ class TestTask(TestCase):
             )
             task.full_clean()
 
+    def test_task_has_no_dependencies_when_empty(self):
+        task = Task.objects.create(
+            title="Independent Task",
+            description="A task with no dependencies",
+            estimated_duration=30
+        )
+        self.assertTrue(task.has_no_dependencies())
+
+    def test_task_has_no_dependencies_when_dependencies_exist(self):
+        task1 = Task.objects.create(
+            title="Dependent Task",
+            description="A task that depends on another",
+            estimated_duration=30
+        )
+        task2 = Task.objects.create(
+            title="Dependency Task",
+            description="A task that is a dependency",
+            estimated_duration=15
+        )
+        task1.dependencies.add(task2)
+        self.assertFalse(task1.has_no_dependencies())
+
+    def test_task_has_no_dependencies_after_clearing(self):
+        task1 = Task.objects.create(
+            title="Task 1",
+            description="Main task",
+            estimated_duration=30
+        )
+        task2 = Task.objects.create(
+            title="Task 2", 
+            description="Dependency task",
+            estimated_duration=15
+        )
+        task1.dependencies.add(task2)
+        self.assertFalse(task1.has_no_dependencies())
+        
+        task1.dependencies.clear()
+        self.assertTrue(task1.has_no_dependencies())
+
 
 class TestTaskList(TestCase):
     def test_tasklist_creation(self):
