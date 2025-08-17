@@ -125,21 +125,3 @@ To create issue{{
 
 **Impact:** Medium
 **Priority:** Medium
-
-## Issue 20
-**Title:** Fix Unit Tests for Two-Layer ID System Implementation
-
-**Description:** Unit tests are failing because they expect the old single-ID behavior where database task_id matched AI's task_id directly. The two-layer ID system (Issue 15 fix) correctly separates AI reference IDs (gen_task_id) from database IDs (task_id), but tests need to be updated to reflect this architecture.
-
-**Acceptance criteria:**
-- [ ] Update test fixtures to use `gen_task_id` instead of `task_id` for AI reference IDs
-- [ ] Modify unit tests to expect unique 4-hex database task_ids instead of AI reference IDs
-- [ ] Ensure tests validate that AI gen_task_id mapping works correctly for dependencies
-- [ ] Update test assertions to check both gen_task_id mapping and database task_id uniqueness
-- [ ] Maintain test coverage for the complete two-layer ID system functionality
-- [ ] Verify all unit tests pass while preserving integration test functionality
-- [ ] Ensure backward compatibility with existing data and real Claude API responses
-
-**Impact:** High
-**Priority:** Medium
-

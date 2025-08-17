@@ -125,4 +125,28 @@ Implemented two-layer ID system separating AI reference IDs (`gen_task_id`) from
 **Impact:** Medium
 **Priority:** Medium
 
+
+
+## Issue 20 ✅ CLOSED
+**Title:** Fix Unit Tests for Two-Layer ID System Implementation
+
+**Description:** Unit tests are failing because they expect the old single-ID behavior where database task_id matched AI's task_id directly. The two-layer ID system (Issue 15 fix) correctly separates AI reference IDs (gen_task_id) from database IDs (task_id), but tests need to be updated to reflect this architecture.
+
+**Resolution:** Successfully fixed unit tests and cleaned up architecture without backward compatibility clutter:
+- [x] Updated test fixtures to use `gen_task_id` instead of `task_id` for AI reference IDs
+- [x] Modified unit tests to expect unique 4-hex database task_ids instead of AI reference IDs
+- [x] Ensured tests validate that AI gen_task_id mapping works correctly for dependencies
+- [x] Updated test assertions to check both gen_task_id mapping and database task_id uniqueness
+- [x] Maintained test coverage for the complete two-layer ID system functionality
+- [x] Verified all unit tests pass while preserving integration test functionality
+- [x] Removed backward compatibility clutter and deprecated methods from service code
+- [x] Updated test utilities to expect gen_task_id format consistently
+- [x] Added comprehensive validation for 4-hex database task_id format and uniqueness
+- [x] Ensured clean separation between AI reference IDs and database integrity requirements
+- [x] All 12 unit tests now pass with proper two-layer ID system validation
+
+**Impact:** High
+**Priority:** Medium
+
+
 ---
