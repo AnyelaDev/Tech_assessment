@@ -21,6 +21,16 @@
         </div>
         
         <div class="form-group">
+            <textarea id="context" 
+                      name="context" 
+                      placeholder="Context (optional): Provide additional context for the AI to consider when grooming your tasks..."
+                      rows="3"></textarea>
+            <small style="color: #666; font-size: 0.85rem; margin-top: 5px; display: block;">
+                💡 Optional: Add context like deadlines, priorities, or project details
+            </small>
+        </div>
+        
+        <div class="form-group">
             <input type="text" 
                    id="task_list_name" 
                    name="task_list_name" 
@@ -106,6 +116,18 @@ form {
     padding: 15px 20px;
     font-size: 1rem;
     color: #333;
+}
+
+.form-group textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 10px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    color: #333;
+    resize: vertical;
+    min-height: 80px;
 }
 
 .button-section {
