@@ -115,8 +115,12 @@ Format your response as a JSON.
         """Convert time estimate from 'hh:mm' format to minutes"""
         try:
             parts = time_str.split(':')
+            if len(parts) != 2:
+                raise ValueError("Invalid time format")
             hours = int(parts[0])
             minutes = int(parts[1])
+            if hours < 0 or minutes < 0 or minutes >= 60:
+                raise ValueError("Invalid time values")
             return hours * 60 + minutes
         except (ValueError, IndexError):
             # Default to 30 minutes if parsing fails
