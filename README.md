@@ -13,6 +13,35 @@ The task is to use **Claude Code** to reimagine a project you previously worked 
 - **03:22** I am having too much fun working. I missed this! however, I am very tired. It's pretty late!
 
 ---
+## Self evaluation and qualitative description of the exercise
+
+> In particular, discuss **how far you got**, 
+
+I got very far in comparison with my original project, because It had a terrible UI, I was using Kivy, which was recommended to me for being a "beinner" in Frontend. I 100% porcent preffer this approach with HTTP and using Django templates. Also, the AI integration, which I had postmoned in my other project, is working in this one, so great! It was a battle, but I am happy.
+
+>what **challenges** you ran into, 
+
+HuggingFace and its API... I couldnt make it work!
+
+Then I  didnt notice my folder was originally named "reimagined " with an extra space at the end. And when I tried to "fix it" My whole venv exploted. I ended up creating the env again from scratch. but I was nervous that something would break my whole project. a bit paranoid, I know. 
+
+I learned a bunch about venvs in the process, though.
+
+> and how the **architecture or approach** taken compared to the previous version you worked on.
+
+The "reimagining" here was basically I would try tackling first the part of the project that I postponed initially: Integrating and testing LLM, using HuggingFace, which I heard was a potential "free" option for this. and I wanted to use Claude to get it to work. But I couldnt. I used a lot of my time there, I wanted to avoid costs. At a certain point, I just had to get the ball rolling. and I switched gears to Claude. 
+
+I switched my approach in terms of not traying to use github tools as much, since my "coworker" (Claude) lives in my terminal, not in github. 
+
+So I started using *.md files to make Claude notice my manual testing results, and find the bugs. The Issues.md became a great tool for mentally mapping out the work needed and tackle issues one by one. 
+
+I gave general guidelines via Workflow.md and asking Claude to keep updating Claude.md
+
+I also used ChatGPT to look at some content in my github and make an objective assessment and give recommendations. I told claude it was feedback from the architect of the project. Since this assignment is timed, I chose to use these tools, and look at general aspects to try and catch bad code, and avoid building trash on top of trash. 
+
+This happened to me in my previous projects, I ended up having an enourmous test suite of mocked functions. I tried to avoid it here at all costs. Though I continued to uncover and fix issues along the way. 
+
+I feared the testing of the AI implementation would become too expensive, so I explicitly made it difficult to run those tests in the workflow. I hope it worked!
 
 ## Work Timeline and Progress
 
@@ -26,6 +55,6 @@ The task is to use **Claude Code** to reimagine a project you previously worked 
 **Key Technical Pivots:**
 - 🔄 **Backend-first approach** proved more challenging than expected
 - 🚫 **HuggingFace API integration failed** → switched to Claude Sonnet
-- 🐛 **Space-in-folder-name bug** cost 90 minutes of debugging time
+- 🐛 **Space-in-folder-name** cost 90 minutes of debugging time. I might have been a bit sleepy too. 
 - ✅ **AI integration successful** with working prompts and inference
 
