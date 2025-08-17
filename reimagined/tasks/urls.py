@@ -14,6 +14,7 @@ urlpatterns = [
     path('personal-assistance/executive-function/todo-timeline/process/', views.process_todo_timeline, name='process_todo_timeline'),
     path('personal-assistance/executive-function/todo-timeline/dependencies/<int:task_list_id>/', views.todo_dependencies, name='todo_dependencies'),
     path('personal-assistance/executive-function/todo-timeline/execute/<int:task_list_id>/', views.timeline_execution, name='timeline_execution'),
+    path('personal-assistance/executive-function/pomodoro/', views.pomodoro, name='pomodoro'),
     
     # Admin routes
     path('personal-assistance/reset-database/', views.reset_database, name='reset_database'),

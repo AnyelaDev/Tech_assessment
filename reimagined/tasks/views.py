@@ -145,3 +145,10 @@ def reset_database(request):
             'success': False,
             'error': str(e)
         }, status=500)
+
+
+def pomodoro(request):
+    """
+    Pomodoro timer page for focus sessions and breaks.
+    """
+    return render(request, 'tasks/pomodoro.html')

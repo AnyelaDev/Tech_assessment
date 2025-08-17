@@ -1,0 +1,435 @@
+{% extends 'base.html' %}
+
+{% block title %}Pomodoro Timer{% endblock %}
+
+{% block content %}
+<div class="pomodoro-container">
+    <div class="page-header">
+        <h1>Pomodoro Timer</h1>
+    </div>
+    
+    <div class="timer-display" id="timerDisplay">
+        <div class="timer-circle">
+            <div class="timer-text" id="timerText">Ready</div>
+            <div class="timer-duration" id="timerDuration">5s</div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+    
+    <div class="timer-controls" id="timerControls">
+        <button class="btn btn-primary" id="startBtn">Start Pomodoro</button>
+        <button class="btn btn-secondary" id="pauseBtn" style="display: none;">Pause</button>
+        <button class="btn btn-secondary" id="resetBtn" style="display: none;">Reset</button>
+        <button class="btn btn-secondary" id="stopBtn" style="display: none;">Stop</button>
+    </div>
+    
+    <div class="timer-config">
+        <div class="form-group">
+            <label for="workDuration">Work Duration (seconds):</label>
+            <input type="number" id="workDuration" min="1" max="3600" value="5">
+        </div>
+        <div class="form-group">
+            <label for="breakDuration">Break Duration (seconds):</label>
+            <input type="number" id="breakDuration" min="1" max="3600" value="5">
+        </div>
+    </div>
+    
+    <div class="back-button-section">
+        <a href="/personal-assistance/executive-function/" class="btn-back">Back</a>
+    </div>
+</div>
+
+<style>
+.pomodoro-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 30px 50px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin: 0;
+}
+
+.timer-display {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 300px;
+}
+
+.timer-circle {
+    width: 200px;
+    height: 200px;
+    border: 8px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    position: relative;
+}
+
+.timer-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.timer-duration {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2563eb;
+    margin-top: 5px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #16a34a, #22c55e);
+    width: 0%;
+    transition: width 0.1s ease;
+    border-radius: 10px;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 120px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: rgba(37, 99, 235, 0.9);
+}
+
+.btn-secondary {
+    background: rgba(100, 116, 139, 0.9);
+}
+
+.timer-config {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.timer-config .form-group {
+    margin-bottom: 0;
+    min-width: 200px;
+}
+
+.timer-config input {
+    text-align: center;
+}
+
+.back-button-section {
+    margin-top: auto;
+    text-align: center;
+}
+
+.btn-back {
+    background: rgba(181, 206, 255, 0.9);
+    color: #333;
+    border: none;
+    border-radius: 15px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* State-specific styles */
+.pomodoro-container.work-state {
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 100%);
+}
+
+.pomodoro-container.break-state {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+}
+
+.pomodoro-container.break-state .timer-display,
+.pomodoro-container.break-state .timer-config,
+.pomodoro-container.break-state .page-header {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.pomodoro-container.break-state .timer-text,
+.pomodoro-container.break-state .timer-duration,
+.pomodoro-container.break-state h1 {
+    color: #1e40af;
+}
+
+.pomodoro-container.restart-state {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.pomodoro-container.restart-state .timer-text,
+.pomodoro-container.restart-state h1 {
+    color: #0d9488;
+}
+
+.pomodoro-container.restart-state .timer-duration {
+    color: #0d9488;
+}
+</style>
+
+<script>
+class PomodoroTimer {
+    constructor() {
+        this.workDuration = 5; // seconds
+        this.breakDuration = 5; // seconds
+        this.currentDuration = 0;
+        this.timeLeft = 0;
+        this.isRunning = false;
+        this.isPaused = false;
+        this.currentState = 'ready'; // 'ready', 'work', 'workDone', 'break', 'breakDone'
+        this.intervalId = null;
+        
+        this.initializeElements();
+        this.attachEventListeners();
+        this.updateDisplay();
+    }
+    
+    initializeElements() {
+        this.timerDisplay = document.getElementById('timerDisplay');
+        this.timerText = document.getElementById('timerText');
+        this.timerDuration = document.getElementById('timerDuration');
+        this.progressBar = document.getElementById('progressBar');
+        this.startBtn = document.getElementById('startBtn');
+        this.pauseBtn = document.getElementById('pauseBtn');
+        this.resetBtn = document.getElementById('resetBtn');
+        this.stopBtn = document.getElementById('stopBtn');
+        this.workDurationInput = document.getElementById('workDuration');
+        this.breakDurationInput = document.getElementById('breakDuration');
+        this.container = document.querySelector('.pomodoro-container');
+    }
+    
+    attachEventListeners() {
+        this.startBtn.addEventListener('click', () => this.start());
+        this.pauseBtn.addEventListener('click', () => this.pause());
+        this.resetBtn.addEventListener('click', () => this.reset());
+        this.stopBtn.addEventListener('click', () => this.stop());
+        
+        this.workDurationInput.addEventListener('change', () => {
+            this.workDuration = parseInt(this.workDurationInput.value);
+            if (!this.isRunning) {
+                this.updateDisplay();
+            }
+        });
+        
+        this.breakDurationInput.addEventListener('change', () => {
+            this.breakDuration = parseInt(this.breakDurationInput.value);
+        });
+    }
+    
+    start() {
+        if (this.currentState === 'ready' || this.currentState === 'breakDone') {
+            this.startWork();
+        } else if (this.currentState === 'workDone') {
+            this.startBreak();
+        } else if (this.isPaused) {
+            this.resume();
+        }
+    }
+    
+    startWork() {
+        this.currentState = 'work';
+        this.currentDuration = this.workDuration;
+        this.timeLeft = this.workDuration;
+        this.startTimer();
+        this.updateState();
+    }
+    
+    startBreak() {
+        this.currentState = 'break';
+        this.currentDuration = this.breakDuration;
+        this.timeLeft = this.breakDuration;
+        this.startTimer();
+        this.updateState();
+    }
+    
+    startTimer() {
+        this.isRunning = true;
+        this.isPaused = false;
+        this.intervalId = setInterval(() => {
+            this.timeLeft--;
+            this.updateDisplay();
+            
+            if (this.timeLeft <= 0) {
+                this.complete();
+            }
+        }, 1000);
+        
+        this.updateControls();
+        this.updateDisplay();
+    }
+    
+    pause() {
+        this.isPaused = true;
+        this.isRunning = false;
+        clearInterval(this.intervalId);
+        this.updateControls();
+    }
+    
+    resume() {
+        this.startTimer();
+    }
+    
+    reset() {
+        this.stop();
+        this.currentState = 'ready';
+        this.updateState();
+        this.updateDisplay();
+    }
+    
+    stop() {
+        this.isRunning = false;
+        this.isPaused = false;
+        clearInterval(this.intervalId);
+        this.updateControls();
+    }
+    
+    complete() {
+        this.stop();
+        
+        if (this.currentState === 'work') {
+            this.currentState = 'workDone';
+            this.timerText.textContent = 'Time for a break';
+            this.startBtn.textContent = 'Start Break';
+        } else if (this.currentState === 'break') {
+            this.currentState = 'breakDone';
+            this.timerText.textContent = 'New pomodoro?';
+            this.startBtn.textContent = 'Start Pomodoro';
+        }
+        
+        this.updateState();
+        this.updateControls();
+    }
+    
+    updateDisplay() {
+        if (this.currentState === 'ready') {
+            this.timerDuration.textContent = this.workDuration + 's';
+        } else if (this.isRunning || this.isPaused) {
+            this.timerDuration.textContent = this.timeLeft + 's';
+            
+            const progress = ((this.currentDuration - this.timeLeft) / this.currentDuration) * 100;
+            this.progressBar.style.width = progress + '%';
+        }
+    }
+    
+    updateState() {
+        // Reset all state classes
+        this.container.classList.remove('work-state', 'break-state', 'restart-state');
+        
+        if (this.currentState === 'work') {
+            this.container.classList.add('work-state');
+            this.timerText.textContent = 'Focus Time';
+        } else if (this.currentState === 'workDone') {
+            this.container.classList.add('break-state');
+            this.timerText.textContent = 'Time for a break';
+        } else if (this.currentState === 'break') {
+            this.container.classList.add('break-state');
+            this.timerText.textContent = 'Break Time';
+        } else if (this.currentState === 'breakDone') {
+            this.container.classList.add('restart-state');
+            this.timerText.textContent = 'New pomodoro?';
+        } else {
+            this.timerText.textContent = 'Ready';
+        }
+    }
+    
+    updateControls() {
+        const isReady = this.currentState === 'ready' || this.currentState === 'breakDone';
+        const isWorkDone = this.currentState === 'workDone';
+        
+        if (isReady || isWorkDone) {
+            this.startBtn.style.display = 'block';
+            this.pauseBtn.style.display = 'none';
+            this.resetBtn.style.display = 'none';
+            this.stopBtn.style.display = 'none';
+            
+            if (isReady) {
+                this.startBtn.textContent = 'Start Pomodoro';
+            } else {
+                this.startBtn.textContent = 'Start Break';
+            }
+        } else if (this.isRunning) {
+            this.startBtn.style.display = 'none';
+            this.pauseBtn.style.display = 'block';
+            this.resetBtn.style.display = 'block';
+            this.stopBtn.style.display = 'block';
+        } else if (this.isPaused) {
+            this.startBtn.style.display = 'block';
+            this.startBtn.textContent = 'Resume';
+            this.pauseBtn.style.display = 'none';
+            this.resetBtn.style.display = 'block';
+            this.stopBtn.style.display = 'block';
+        }
+    }
+}
+
+// Initialize the timer when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    new PomodoroTimer();
+});
+</script>
+{% endblock %}
