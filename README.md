@@ -64,3 +64,6 @@ The "reimagining" part consisted in a series of little changes in several areas 
 - 🐛 **Space-in-folder-name** cost 90 minutes of debugging time. I might have been a bit sleepy too. 
 - ✅ **AI integration successful** with working prompts and inference
 
+--------------
+August 17th
+- **18:08** I started again. Made manual changes to the *.md files I use to manage Claude. I hope this is more efficient. 
