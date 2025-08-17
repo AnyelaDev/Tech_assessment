@@ -23,6 +23,11 @@ MindTimer is a Django-based web application that helps users convert free-form t
 - Color scheme managed centrally (no hardcoding)
 - Avoid over-mocking in tests - focus on actual behavior
 
+## Documentation Conventions
+- **Changelog Order**: Ordered by completion date (most recent first), NOT by issue number
+- **Issue Numbers**: Are identifiers only, not chronological order
+- **README Updates**: Always update changelog when completing issues
+
 ## Architecture Components
 1. **Input Layer**: Django HTML forms for to-do list submission
 2. **AI Processing**: Claude Sonnet API integration for intelligent task breakdown
