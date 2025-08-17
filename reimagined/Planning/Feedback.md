@@ -1,0 +1,1 @@
+{{new issue- Simple lists to Json. No deep analysis. Simpler models?}}
