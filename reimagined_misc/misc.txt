@@ -1,3 +1,3 @@
 ./misc\ clean\ merges.sh \
-"6and7-define-minimal-models-and-add-context-functionality" \
+"feature_branch" \
 "master"
