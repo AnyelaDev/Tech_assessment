@@ -126,3 +126,4 @@ To create issue{{
 **Impact:** High
 **Priority:** High
 
+{{new issue- Simple lists to Json. No deep analysis. Simpler models?}}
