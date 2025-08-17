@@ -24,25 +24,40 @@ tasks/tests/                    # App-specific tests
 
 ## Running Tests
 
-### All Tests
+### ⚠️ Cost Protection
+**AI integration tests are EXPENSIVE and disabled by default** to prevent accidental API charges. Use the `--AItest-ON` flag to explicitly enable them.
+
+### Safe Tests (No API Costs)
 ```bash
+# Fast unit tests (mocked APIs) - ALWAYS SAFE
+python manage.py test tests.unit
+
+# App-specific tests - ALWAYS SAFE  
+python manage.py test tasks.tests
+
+# All tests with AI tests skipped - SAFE
 python manage.py test
 ```
 
-### By Category
+### Expensive AI Tests (⚠️ COSTS MONEY)
 ```bash
-# Fast unit tests (mocked APIs)
-python manage.py test tests.unit
+# Enable ALL AI tests (integration + e2e) - ⚠️ EXPENSIVE
+python test_runner.py --AItest-ON
 
-# Integration tests (require CLAUDE_API_KEY)  
-python manage.py test tests.integration
+# Enable specific AI test categories
+python test_runner.py --AItest-ON tests.integration  
+python test_runner.py --AItest-ON tests.e2e
 
-# End-to-end tests (full workflow)
-python manage.py test tests.e2e
-
-# App-specific tests
-python manage.py test tasks.tests
+# Alternative using environment variable
+AI_TEST_ENABLED=true python manage.py test tests.integration
 ```
+
+### Test Runner Features
+The custom `test_runner.py` provides:
+- Clear warnings about API costs
+- Automatic flag handling
+- Environment variable setting
+- Cost protection by default
 
 ### Individual Test Files
 ```bash

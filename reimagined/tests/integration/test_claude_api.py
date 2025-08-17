@@ -15,6 +15,7 @@ class TestClaudeAPIIntegration(BaseClaudeTestCase, ClaudeTestSkipMixin):
     def setUp(self):
         """Set up integration test fixtures"""
         super().setUp()
+        self.skip_if_ai_testing_disabled()
         self.skip_if_claude_key_invalid()
     
     @requires_claude_api
@@ -167,6 +168,7 @@ class TestClaudeAPILimits(BaseClaudeTestCase, ClaudeTestSkipMixin):
     
     def setUp(self):
         super().setUp()
+        self.skip_if_ai_testing_disabled()
         self.skip_if_claude_key_invalid()
     
     @requires_claude_api

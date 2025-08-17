@@ -2,6 +2,7 @@
 Test utilities and helper functions
 """
 import os
+import sys
 from django.test import TestCase
 from django.conf import settings
 from tasks.models import TaskList, Task
@@ -77,8 +78,14 @@ class BaseClaudeTestCase(TestCase):
         return counts
 
 
+def is_ai_testing_enabled():
+    """Check if AI testing is enabled via command line flag"""
+    # Check for --AItest-ON flag in command line arguments
+    return '--AItest-ON' in sys.argv or os.getenv('AI_TEST_ENABLED', '').lower() == 'true'
+
+
 class ClaudeTestSkipMixin:
-    """Mixin to skip tests when Claude API key is not available"""
+    """Mixin to skip tests when Claude API key is not available or AI testing is disabled"""
     
     def skip_if_no_claude_key(self):
         """Skip test if Claude API key is not configured"""
@@ -91,6 +98,11 @@ class ClaudeTestSkipMixin:
             not settings.CLAUDE_API_KEY or
             'your_claude_api_key_here' in settings.CLAUDE_API_KEY.lower()):
             self.skipTest("Valid CLAUDE_API_KEY required for integration test")
+    
+    def skip_if_ai_testing_disabled(self):
+        """Skip test if AI testing flag is not enabled"""
+        if not is_ai_testing_enabled():
+            self.skipTest("AI testing disabled - use '--AItest-ON' flag or set AI_TEST_ENABLED=true to enable expensive AI tests")
 
 
 def assert_time_parsing_valid(test_case, time_str, expected_minutes):
@@ -128,8 +140,13 @@ def clean_test_data():
 
 # Decorator for integration tests
 def requires_claude_api(test_func):
-    """Decorator to skip test if Claude API is not available"""
+    """Decorator to skip test if Claude API is not available or AI testing is disabled"""
     def wrapper(self, *args, **kwargs):
+        # First check if AI testing is enabled
+        if not is_ai_testing_enabled():
+            self.skipTest("AI testing disabled - use '--AItest-ON' flag or set AI_TEST_ENABLED=true to enable expensive AI tests")
+        
+        # Then check API key availability
         if (not hasattr(settings, 'CLAUDE_API_KEY') or 
             not settings.CLAUDE_API_KEY or
             'your_claude_api_key_here' in settings.CLAUDE_API_KEY.lower()):

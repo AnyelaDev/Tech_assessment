@@ -15,6 +15,7 @@ class TestFullWorkflowE2E(BaseClaudeTestCase, ClaudeTestSkipMixin):
     
     def setUp(self):
         super().setUp()
+        self.skip_if_ai_testing_disabled()
         self.skip_if_claude_key_invalid()
         
     def tearDown(self):
@@ -239,6 +240,7 @@ class TestViewIntegrationE2E(TestCase, ClaudeTestSkipMixin):
     """End-to-end tests through Django views"""
     
     def setUp(self):
+        self.skip_if_ai_testing_disabled()
         self.skip_if_claude_key_invalid()
     
     def tearDown(self):
