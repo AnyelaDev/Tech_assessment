@@ -134,6 +134,38 @@ class TestNavigationViews(TestCase):
         response = self.client.get('/personal-assistance/executive-function/todo-timeline/dependencies/999/')
         self.assertEqual(response.status_code, 404)
 
+    def test_todo_dependencies_view_applies_css_class_for_no_dependencies(self):
+        task_list = TaskList.objects.create(
+            name="Test Tasks",
+            raw_input="Independent task\nDependent task"
+        )
+        
+        # Task with no dependencies
+        independent_task = Task.objects.create(
+            title="Independent task",
+            description="A task with no dependencies",
+            estimated_duration=30,
+            task_list=task_list
+        )
+        
+        # Task with dependencies
+        dependent_task = Task.objects.create(
+            title="Dependent task", 
+            description="A task that depends on another",
+            estimated_duration=45,
+            task_list=task_list
+        )
+        dependent_task.dependencies.add(independent_task)
+        
+        response = self.client.get(f'/personal-assistance/executive-function/todo-timeline/dependencies/{task_list.id}/')
+        self.assertEqual(response.status_code, 200)
+        
+        # Check that independent task has special CSS class
+        self.assertContains(response, 'class="task-card no-dependencies"')
+        # Check that dependent task has regular CSS class
+        self.assertContains(response, 'class="task-card"')
+        self.assertNotContains(response, 'class="task-card no-dependencies"' + '.*' + dependent_task.title)
+
     def test_timeline_execution_view_with_valid_task_list(self):
         task_list = TaskList.objects.create(
             name="Test Tasks",
@@ -164,6 +196,36 @@ class TestNavigationViews(TestCase):
     def test_timeline_execution_view_invalid_id_returns_404(self):
         response = self.client.get('/personal-assistance/executive-function/todo-timeline/execute/999/')
         self.assertEqual(response.status_code, 404)
+
+    def test_timeline_execution_view_applies_css_class_for_no_dependencies(self):
+        task_list = TaskList.objects.create(
+            name="Test Tasks",
+            raw_input="Independent task\nDependent task"
+        )
+        
+        # Task with no dependencies
+        independent_task = Task.objects.create(
+            title="Independent task",
+            description="A task with no dependencies",
+            estimated_duration=30,
+            task_list=task_list,
+            can_run_parallel=True
+        )
+        
+        # Task with dependencies
+        dependent_task = Task.objects.create(
+            title="Dependent task", 
+            description="A task that depends on another",
+            estimated_duration=45,
+            task_list=task_list
+        )
+        dependent_task.dependencies.add(independent_task)
+        
+        response = self.client.get(f'/personal-assistance/executive-function/todo-timeline/execute/{task_list.id}/')
+        self.assertEqual(response.status_code, 200)
+        
+        # Check for special CSS class on parallel task section
+        self.assertContains(response, 'class="parallel-task no-dependencies"')
 
     def test_navigation_breadcrumbs_context(self):
         response = self.client.get('/personal-assistance/executive-function/')

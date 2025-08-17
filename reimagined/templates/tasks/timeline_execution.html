@@ -34,7 +34,7 @@
         <h3>in parallel:</h3>
         <div class="parallel-tasks">
             {% for task in parallel_tasks %}
-            <div class="parallel-task">
+            <div class="parallel-task{% if task.has_no_dependencies %} no-dependencies{% endif %}">
                 <h4>&lt;{{ task.title }}&gt;</h4>
                 <div>Time: &lt;{{ task.estimated_duration }}h:mm&gt;</div>
                 <div>Dependencies: &lt;{% if task.dependencies %}{{ task.dependencies }}{% else %}No dependencies{% endif %}&gt;</div>
@@ -189,6 +189,15 @@
     flex: 1;
     min-width: 200px;
     font-size: 0.9rem;
+}
+
+/* Parallel tasks with no dependencies - uses high-contrast colors with visual border indicator
+   Background: Light yellow/cream (rgba(255, 248, 181, 0.9)) provides sufficient contrast with dark text
+   Border: Amber (#f59e0b) provides additional visual distinction beyond just color
+   This ensures accessibility for colorblind users */
+.parallel-task.no-dependencies {
+    background: rgba(255, 248, 181, 0.9);
+    border-left: 4px solid #f59e0b;
 }
 
 .parallel-task h4 {
