@@ -90,10 +90,12 @@ def todo_timeline_input(request):
 def todo_dependencies(request, task_list_id):
     task_list = get_object_or_404(TaskList, id=task_list_id)
     tasks = task_list.tasks.all()
+    analysis = request.session.get('analysis', '')
     
     return render(request, 'tasks/todo_dependencies.html', {
         'task_list': task_list,
         'tasks': tasks,
+        'analysis': analysis
     })
 
 

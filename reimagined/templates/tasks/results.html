@@ -8,25 +8,74 @@
     <p>AI-processed task schedule</p>
 </div>
 
+{% if analysis %}
+<div style="margin-bottom: 30px; padding: 16px; background: #f8f9fa; border-radius: 8px; border: 1px solid var(--border-color);">
+    <h3 style="margin-bottom: 10px; color: var(--text-color);">Analysis:</h3>
+    <p style="color: var(--secondary-color); line-height: 1.5;">{{ analysis }}</p>
+</div>
+{% endif %}
+
 <div class="task-list">
     <h2 style="margin-bottom: 20px; color: var(--text-color);">Tasks:</h2>
     
-    {% for task in tasks %}
-    <div class="task-item">
-        <div class="task-title">{{ task.title }}</div>
-        <div style="color: var(--secondary-color); margin: 4px 0;">{{ task.description }}</div>
-        <div class="task-duration">{{ task.estimated_duration }} min</div>
-        {% if task.can_run_parallel %}
-        <div class="task-parallel">✓ Can run in parallel</div>
-        {% endif %}
+    {% if tasks %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr style="background: var(--background-color); border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-color);">Task ID</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-color);">Task</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-color);">Priority</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-color);">Duration</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-color);">Dependencies</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px; font-family: monospace; font-size: 0.9em; color: var(--secondary-color);">{{ task.task_id }}</td>
+                    <td style="padding: 12px;">
+                        <div style="font-weight: 500; color: var(--text-color); margin-bottom: 4px;">{{ task.title }}</div>
+                        <div style="font-size: 0.9em; color: var(--secondary-color);">{{ task.description }}</div>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="
+                            padding: 4px 8px; 
+                            border-radius: 4px; 
+                            font-size: 0.8em; 
+                            font-weight: 500; 
+                            text-transform: uppercase;
+                            {% if task.priority == 'high' %}
+                                background: #fee2e2; color: #dc2626;
+                            {% elif task.priority == 'medium' %}
+                                background: #fef3c7; color: #d97706;
+                            {% else %}
+                                background: #dcfce7; color: #16a34a;
+                            {% endif %}
+                        ">{{ task.priority }}</span>
+                    </td>
+                    <td style="padding: 12px; color: var(--text-color);">{{ task.estimated_duration }} min</td>
+                    <td style="padding: 12px; color: var(--secondary-color); font-size: 0.9em;">
+                        {% if task.dependencies.all %}
+                            {% for dep in task.dependencies.all %}
+                                <span style="font-family: monospace;">{{ dep.task_id }}</span>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    {% empty %}
-    <p style="color: var(--secondary-color);">No tasks found.</p>
-    {% endfor %}
     
-    <div class="total-time">
-        Total time: {{ total_time }} minutes
+    <div class="total-time" style="text-align: center; padding: 16px; background: var(--background-color); border-radius: 8px; font-weight: 500;">
+        Total estimated time: {{ total_time }} minutes
     </div>
+    {% else %}
+    <p style="color: var(--secondary-color);">No tasks found.</p>
+    {% endif %}
 </div>
 
 <div style="margin-top: 30px; text-align: center;">
