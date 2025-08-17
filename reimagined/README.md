@@ -29,7 +29,7 @@ source .venv/bin/activate
 pip install django python-dotenv requests
 
 # Configure Claude API key
-echo "CLAUDE_API_KEY=your_claude_api_key_here" >> .env
+echo "`CLAUDE_API_KEY`=your_claude_api_key_here" >> .env
 
 # Run migrations
 python manage.py migrate
@@ -70,11 +70,11 @@ python manage.py test tasks.tests
 # All tests (skips expensive AI tests)
 python manage.py test
 
-# Enable AI tests (⚠️ COSTS MONEY - requires CLAUDE_API_KEY)
+# Enable AI tests (⚠️ COSTS MONEY - requires `CLAUDE_API_KEY`)
 python test_runner.py --AItest-ON
 
 # Or using environment variable
-AI_TEST_ENABLED=true python manage.py test
+`AI_TEST_ENABLED`=true python manage.py test
 
 # Run specific expensive test categories
 python test_runner.py --AItest-ON tests.integration
@@ -115,27 +115,44 @@ task_list, analysis = groomer.process_todo(
 print(f"Created {task_list.tasks.count()} tasks")
 print(f"Analysis: {analysis}")
 
-# View individual tasks
+# View individual tasks with new ID system
 for task in task_list.tasks.all():
-    print(f"- {task.title} ({task.priority}, {task.estimated_duration}min)")
+    print(f"- {task.title} (ID: {task.task_id}, {task.priority}, {task.estimated_duration}min)")
+    
+# Check dependencies
+for task in task_list.tasks.all():
+    if task.dependencies.exists():
+        deps = [dep.task_id for dep in task.dependencies.all()]
+        print(f"  Dependencies: {deps}")
 ```
 
 #### Database Testing
 ```bash
 python manage.py shell
 
-# Create test data with new fields
+# Create test data with unique task_ids
 from tasks.models import TaskList, Task
 task_list = TaskList.objects.create(name="Test List", raw_input="Sample todo text")
-task = Task.objects.create(
-    title="Test Task",
-    description="Task description",
-    task_id="a101",
+
+# Task IDs are now auto-generated to ensure uniqueness
+task1 = Task.objects.create(
+    title="First Task",
+    description="Task description", 
     priority="high",
     estimated_duration=60,
     task_list=task_list
 )
-print(f"Created: {task} with priority {task.priority}")
+print(f"Created: {task1} with ID {task1.task_id}")
+
+task2 = Task.objects.create(
+    title="Second Task",
+    description="Depends on first task",
+    priority="medium", 
+    estimated_duration=30,
+    task_list=task_list
+)
+task2.dependencies.add(task1)
+print(f"Created: {task2} with ID {task2.task_id}, depends on {task1.task_id}")
 ```
 
 ## Architecture
@@ -143,17 +160,32 @@ print(f"Created: {task} with priority {task.priority}")
 ### Models
 - **TaskList**: Container for related tasks with original input text
 - **Task**: Individual task with priority, time estimate, and dependencies
+  - Unique 4-character hex `task_id` for database integrity
+  - Many-to-many dependencies with circular dependency validation
+  - Priority levels (high/medium/low) with validation
 - **Schedule**: Optimization algorithms for task scheduling
 
 ### Services
 - **ClaudeTaskGroomer**: AI service for todo text processing
-  - JSON response parsing
-  - Time estimate conversion
-  - Dependency relationship mapping
+  - **Two-Layer ID System**: Separates AI reference IDs (`gen_task_id`) from database IDs (`task_id`)
+  - **Dependency Mapping**: Uses AI's `gen_task_id` for dependency relationships, then maps to database tasks
+  - **Unique ID Generation**: Always generates unique 4-character hex database IDs
+  - JSON response parsing with error handling
+  - Time estimate conversion (hh:mm → minutes)
+
+### Issue Fix Log
+
+| Issue | Issue Name | What Was Fixed and Impact |
+|-------|------------|---------------------------|
+| 1 | LLM Service | Initial AI integration for intelligent task breakdown and analysis. Implemented Claude Sonnet 3.5 integration with comprehensive testing, priority assignment, time estimation, task dependency management, and modern UI with cost protection system. |
+| 6 | Define Minimal Models Explicitly | Enhanced Task and TaskList models with clear structure and validation. Fixed `task_id` generation with 4-byte hex format, added proper model validation with circular dependency prevention, and improved UI dependency display. |
+| 7 | Add Context Field for Enhanced AI Processing | Added optional context textarea field to improve AI task grooming accuracy. Connected context to TaskGroomer service and Claude API calls, included context in LLM prompt for better task analysis. |
+| 15 | Fix UNIQUE constraint failed: tasks_task.task_id Database Error | Fixed IntegrityError crashes by implementing two-layer ID system (`gen_task_id` for AI references, `task_id` for database). Ensures robust dependency mapping and eliminates duplicate ID conflicts. Application now handles multiple task creation without database crashes. |
 
 ### Key Features
 - **Intelligent Parsing**: Claude breaks down complex todos into actionable tasks
 - **Priority Assignment**: Automatic high/medium/low priority based on context
 - **Time Estimates**: Realistic time predictions in hh:mm format
-- **Dependency Management**: Task relationships for logical sequencing
-- **Error Handling**: Graceful fallbacks for API failures
+- **Dependency Management**: Task relationships for logical sequencing with robust ID mapping
+- **Error Handling**: Graceful fallbacks for API failures and duplicate ID conflicts
+- **Database Integrity**: Unique constraints with automatic collision resolution

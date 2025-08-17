@@ -49,4 +49,22 @@
 **Impact:** Medium
 **Priority:** Medium
 
+## Issue 15
+**Title:** Fix UNIQUE constraint failed: tasks_task.task_id Database Error
+
+**Description:** The application crashes when processing todo items due to duplicate task_id generation, causing IntegrityError in the database.
+
+**Acceptance criteria:**
+- [x] Investigate task_id generation logic in TaskGroomer service
+- [x] Ensure task_id generation produces unique values across all task creation
+- [x] Fix the duplicate ID issue in tasks/services.py:144
+- [x] Add validation to prevent duplicate task_id creation
+- [x] Test task creation with multiple tasks to ensure uniqueness
+
+**Impact:** High
+**Priority:** High
+**Status:** COMPLETED
+
+**Solution Summary:**
+Implemented two-layer ID system separating AI reference IDs (`gen_task_id`) from database IDs (`task_id`). AI uses descriptive reference IDs for dependency mapping while database generates unique 4-character hex IDs automatically. Added comprehensive TDD test coverage and dependency mapping logic that preserves AI relationships while ensuring database integrity.
 ---
