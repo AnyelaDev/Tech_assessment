@@ -27,6 +27,11 @@
             </div>
         </a>
     </div>
+    
+    <div class="admin-section">
+        <h3>Development Tools</h3>
+        <button id="resetDatabaseBtn" class="reset-btn">Reset Database</button>
+    </div>
 </div>
 
 <style>
@@ -95,5 +100,80 @@
     text-align: center;
     margin: 0;
 }
+
+.admin-section {
+    margin-top: 50px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-section h3 {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.reset-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.reset-btn:hover {
+    background: #ff5252;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const resetBtn = document.getElementById('resetDatabaseBtn');
+    
+    resetBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to reset the database? This will delete all tasks and task lists. This action cannot be undone.')) {
+            fetch('/personal-assistance/reset-database/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Database reset successfully!');
+                } else {
+                    alert('Error resetting database: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Network error occurred while resetting database.');
+            });
+        }
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
 {% endblock %}

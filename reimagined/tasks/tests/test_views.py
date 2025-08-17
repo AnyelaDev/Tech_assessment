@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from tasks.models import TaskList, Task
+import json
 
 
 class TestHomeView(TestCase):
@@ -212,3 +213,90 @@ class TestNavigationViews(TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/personal-assistance/')
+
+
+class TestResetDatabaseView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        
+        # Create test data
+        self.task_list_1 = TaskList.objects.create(
+            name="Test Tasks 1",
+            raw_input="Do laundry\nBuy groceries"
+        )
+        self.task_list_2 = TaskList.objects.create(
+            name="Test Tasks 2",
+            raw_input="Clean kitchen\nWash dishes"
+        )
+        
+        self.task_1 = Task.objects.create(
+            title="Do laundry",
+            description="Wash and dry clothes",
+            estimated_duration=120,
+            task_list=self.task_list_1
+        )
+        self.task_2 = Task.objects.create(
+            title="Buy groceries",
+            description="Shop for food",
+            estimated_duration=45,
+            task_list=self.task_list_1,
+            can_run_parallel=True
+        )
+        self.task_3 = Task.objects.create(
+            title="Clean kitchen",
+            description="Deep clean the kitchen",
+            estimated_duration=60,
+            task_list=self.task_list_2
+        )
+
+    def test_reset_database_requires_post_method(self):
+        response = self.client.get('/personal-assistance/reset-database/')
+        self.assertEqual(response.status_code, 405)  # Method not allowed
+
+    def test_reset_database_successful_reset(self):
+        # Verify initial data exists
+        self.assertEqual(TaskList.objects.count(), 2)
+        self.assertEqual(Task.objects.count(), 3)
+        
+        # Make POST request to reset endpoint
+        response = self.client.post('/personal-assistance/reset-database/')
+        
+        # Verify successful response
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertTrue(response_data['success'])
+        self.assertIn('Database reset successfully', response_data['message'])
+        self.assertIn('Deleted 3 tasks and 2 task lists', response_data['message'])
+        
+        # Verify all data is deleted
+        self.assertEqual(TaskList.objects.count(), 0)
+        self.assertEqual(Task.objects.count(), 0)
+
+    def test_reset_database_empty_database(self):
+        # Clear existing data first
+        TaskList.objects.all().delete()
+        Task.objects.all().delete()
+        
+        # Verify database is empty
+        self.assertEqual(TaskList.objects.count(), 0)
+        self.assertEqual(Task.objects.count(), 0)
+        
+        # Make POST request to reset endpoint
+        response = self.client.post('/personal-assistance/reset-database/')
+        
+        # Should still return success
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertTrue(response_data['success'])
+        self.assertIn('Deleted 0 tasks and 0 task lists', response_data['message'])
+
+    def test_reset_database_returns_json_response(self):
+        response = self.client.post('/personal-assistance/reset-database/')
+        
+        self.assertEqual(response['Content-Type'], 'application/json')
+        response_data = json.loads(response.content)
+        
+        # Verify expected JSON structure
+        self.assertIn('success', response_data)
+        self.assertIn('message', response_data)
+        self.assertIsInstance(response_data['success'], bool)
