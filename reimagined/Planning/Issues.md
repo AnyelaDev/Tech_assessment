@@ -141,18 +141,3 @@ To create issue{{
 **Impact:** Low
 **Priority:** Low
 
-## Issue 18
-**Title:** Add Database Reset Button to Personal Assistance Page
-
-**Description:** Add a convenient database reset button on the personal assistance page (http://127.0.0.1:8000/personal-assistance/) for development and testing purposes.
-
-**Acceptance criteria:**
-- [ ] Add reset database button to personal assistance page
-- [ ] Implement backend endpoint to safely clear all task data
-- [ ] Add confirmation dialog to prevent accidental resets
-- [ ] Ensure reset only affects task/tasklist tables, not auth data
-- [ ] Add success/error feedback messages
-- [ ] Consider restricting to development environment only
-
-**Impact:** Low
-**Priority:** Low

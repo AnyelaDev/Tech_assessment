@@ -67,4 +67,20 @@
 
 **Solution Summary:**
 Implemented two-layer ID system separating AI reference IDs (`gen_task_id`) from database IDs (`task_id`). AI uses descriptive reference IDs for dependency mapping while database generates unique 4-character hex IDs automatically. Added comprehensive TDD test coverage and dependency mapping logic that preserves AI relationships while ensuring database integrity.
+
+## Issue 18
+**Title:** Add Database Reset Button to Personal Assistance Page
+
+**Description:** Add a convenient database reset button on the personal assistance page (http://127.0.0.1:8000/personal-assistance/) for development and testing purposes.
+
+**Acceptance criteria:**
+- [x] Add reset database button to personal assistance page
+- [x] Implement backend endpoint to safely clear all task data
+- [x] Add confirmation dialog to prevent accidental resets
+- [x] Ensure reset only affects task/tasklist tables, not auth data (mocked)
+- [x] Add success/error feedback messages
+- [x] Works in all environments (development/production)
+
+**Impact:** Low
+**Priority:** Low
 ---

@@ -173,14 +173,15 @@ print(f"Created: {task2} with ID {task2.task_id}, depends on {task1.task_id}")
   - JSON response parsing with error handling
   - Time estimate conversion (hh:mm → minutes)
 
-### Issue Fix Log
+### Changelog
 
 | Issue | Issue Name | What Was Fixed and Impact |
 |-------|------------|---------------------------|
-| 1 | LLM Service | Initial AI integration for intelligent task breakdown and analysis. Implemented Claude Sonnet 3.5 integration with comprehensive testing, priority assignment, time estimation, task dependency management, and modern UI with cost protection system. |
-| 6 | Define Minimal Models Explicitly | Enhanced Task and TaskList models with clear structure and validation. Fixed `task_id` generation with 4-byte hex format, added proper model validation with circular dependency prevention, and improved UI dependency display. |
-| 7 | Add Context Field for Enhanced AI Processing | Added optional context textarea field to improve AI task grooming accuracy. Connected context to TaskGroomer service and Claude API calls, included context in LLM prompt for better task analysis. |
+| 18 | Add Database Reset Button to Personal Assistance Page | Implemented convenient database reset functionality for development and testing. Added reset button to personal assistance page with confirmation dialog, backend endpoint to safely clear task/tasklist data while preserving auth data, comprehensive test coverage, and user feedback messages. |
 | 15 | Fix UNIQUE constraint failed: tasks_task.task_id Database Error | Fixed IntegrityError crashes by implementing two-layer ID system (`gen_task_id` for AI references, `task_id` for database). Ensures robust dependency mapping and eliminates duplicate ID conflicts. Application now handles multiple task creation without database crashes. |
+| 7 | Add Context Field for Enhanced AI Processing | Added optional context textarea field to improve AI task grooming accuracy. Connected context to TaskGroomer service and Claude API calls, included context in LLM prompt for better task analysis. |
+| 6 | Define Minimal Models Explicitly | Enhanced Task and TaskList models with clear structure and validation. Fixed `task_id` generation with 4-byte hex format, added proper model validation with circular dependency prevention, and improved UI dependency display. |
+| 1 | LLM Service | Initial AI integration for intelligent task breakdown and analysis. Implemented Claude Sonnet 3.5 integration with comprehensive testing, priority assignment, time estimation, task dependency management, and modern UI with cost protection system. |
 
 ### Key Features
 - **Intelligent Parsing**: Claude breaks down complex todos into actionable tasks
