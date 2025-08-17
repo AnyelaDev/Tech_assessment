@@ -26,7 +26,8 @@ def process_todo(request):
     
     try:
         groomer = TaskGroomer()
-        task_list = groomer.process_todo(task_list_name, todo_text)
+        task_list, analysis = groomer.process_todo(task_list_name, todo_text)
+        request.session['analysis'] = analysis
         return redirect('results', task_list_id=task_list.id)
     except ValueError as e:
         return render(request, 'tasks/home.html', {
@@ -50,7 +51,8 @@ def process_todo_timeline(request):
     
     try:
         groomer = TaskGroomer()
-        task_list = groomer.process_todo(task_list_name, todo_text)
+        task_list, analysis = groomer.process_todo(task_list_name, todo_text)
+        request.session['analysis'] = analysis
         return redirect('todo_dependencies', task_list_id=task_list.id)
     except ValueError as e:
         return render(request, 'tasks/todo_timeline_input.html', {
@@ -62,11 +64,13 @@ def process_todo_timeline(request):
 def results(request, task_list_id):
     task_list = get_object_or_404(TaskList, id=task_list_id)
     tasks = task_list.tasks.all()
+    analysis = request.session.get('analysis', '')
     
     return render(request, 'tasks/results.html', {
         'task_list': task_list,
         'tasks': tasks,
-        'total_time': task_list.total_estimated_time()
+        'total_time': task_list.total_estimated_time(),
+        'analysis': analysis
     })
 
 

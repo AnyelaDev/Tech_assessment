@@ -29,9 +29,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-917@go0=4i+i(s%e)cfruy=4ki
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-# Hugging Face configuration for AI integration
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
-HUGGINGFACE_MODEL = os.getenv("HUGGINGFACE_MODEL", "google/flan-t5-base")
+# Claude API configuration for AI integration
+CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
 
 ALLOWED_HOSTS = []
 
