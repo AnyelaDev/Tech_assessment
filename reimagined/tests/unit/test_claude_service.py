@@ -146,25 +146,35 @@ class TestClaudeTaskGroomerUnit(BaseClaudeTestCase):
         tasks = task_list.tasks.all()
         self.assertEqual(tasks.count(), 3)
         
-        # Verify specific task details
-        list_task = tasks.get(task_id="a101")
+        # Verify specific task details using title-based lookups
+        list_task = tasks.get(title="Create grocery shopping list")
         self.assertEqual(list_task.title, "Create grocery shopping list")
         self.assertEqual(list_task.priority, "medium")
         self.assertEqual(list_task.estimated_duration, 15)  # 00:15 = 15 minutes
+        # Verify database task_id is 4-hex format, not AI reference ID
+        self.assertRegex(list_task.task_id, r'^[0-9a-f]{4}$')
+        self.assertNotEqual(list_task.task_id, "a101")  # Should not match AI reference ID
         
-        cook_task = tasks.get(task_id="a103")
+        cook_task = tasks.get(title="Prepare and cook dinner")
         self.assertEqual(cook_task.title, "Prepare and cook dinner")
         self.assertEqual(cook_task.priority, "high")
         self.assertEqual(cook_task.estimated_duration, 45)  # 00:45 = 45 minutes
+        self.assertRegex(cook_task.task_id, r'^[0-9a-f]{4}$')
         
-        # Verify dependency relationships
-        shop_task = tasks.get(task_id="a102")
+        # Verify dependency relationships (using title-based lookups)
+        shop_task = tasks.get(title="Go to grocery store and shop")
         self.assertEqual(shop_task.dependencies.count(), 1)
         self.assertEqual(shop_task.dependencies.first(), list_task)
         
-        cook_task = tasks.get(task_id="a103") 
+        cook_task = tasks.get(title="Prepare and cook dinner") 
         self.assertEqual(cook_task.dependencies.count(), 1)
         self.assertEqual(cook_task.dependencies.first(), shop_task)
+        
+        # Verify all database task_ids are unique 4-hex format
+        task_ids = [task.task_id for task in tasks]
+        self.assertEqual(len(task_ids), len(set(task_ids)))  # All unique
+        for task_id in task_ids:
+            self.assertRegex(task_id, r'^[0-9a-f]{4}$')  # 4-hex format
     
     def test_create_task_list_failure(self):
         """Test handling of failed Claude result"""
@@ -205,7 +215,12 @@ class TestClaudeTaskGroomerUnit(BaseClaudeTestCase):
         # Verify tasks were created
         self.assertEqual(task_list.tasks.count(), 1)
         task = task_list.tasks.first()
-        self.assertEqual(task.task_id, "a101")
+        self.assertEqual(task.title, "Call dentist to schedule appointment")
+        self.assertEqual(task.priority, "medium")
+        self.assertEqual(task.estimated_duration, 5)  # 00:05 = 5 minutes
+        # Verify database task_id is 4-hex format, not AI reference ID
+        self.assertRegex(task.task_id, r'^[0-9a-f]{4}$')
+        self.assertNotEqual(task.task_id, "a101")  # Should not match AI reference ID
     
     def test_task_model_field_validation(self):
         """Test that Task model fields accept valid values"""

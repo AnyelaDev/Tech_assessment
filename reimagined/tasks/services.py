@@ -137,22 +137,6 @@ Format your response as a JSON.
             if new_id not in used_ids and not Task.objects.filter(task_id=new_id).exists():
                 return new_id
 
-    def ensure_unique_task_id(self, proposed_id: str, used_ids: set) -> str:
-        """DEPRECATED: Kept for backward compatibility with existing tests"""
-        import secrets
-        import re
-        
-        # Validate format of proposed_id
-        if proposed_id and re.match(r'^[0-9a-fA-F]{4}$', proposed_id):
-            # Check if it's unique within this batch and globally
-            if proposed_id not in used_ids and not Task.objects.filter(task_id=proposed_id).exists():
-                return proposed_id
-        
-        # Generate a new unique task_id
-        while True:
-            new_id = secrets.token_hex(2)  # 2 bytes = 4 hex chars
-            if new_id not in used_ids and not Task.objects.filter(task_id=new_id).exists():
-                return new_id
 
     def create_task_list_from_groomed_tasks(self, name: str, raw_input: str, groomed_result: dict):
         task_list = TaskList.objects.create(

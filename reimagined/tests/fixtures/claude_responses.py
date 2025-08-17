@@ -9,7 +9,7 @@ SIMPLE_TODO_RESPONSE = {
     "tasks": [
         {
             "task": "Call dentist to schedule appointment",
-            "task_id": "a101",
+            "gen_task_id": "a101",
             "time_estimate": "00:05",
             "dependencies": [],
             "priority": "medium"
@@ -22,35 +22,35 @@ COMPLEX_TODO_RESPONSE = {
     "tasks": [
         {
             "task": "Research company background and values",
-            "task_id": "a101", 
+            "gen_task_id": "a101", 
             "time_estimate": "01:00",
             "dependencies": [],
             "priority": "high"
         },
         {
             "task": "Update resume with recent experience",
-            "task_id": "a102",
+            "gen_task_id": "a102",
             "time_estimate": "01:30",
             "dependencies": [],
             "priority": "high"
         },
         {
             "task": "Practice common interview questions",
-            "task_id": "a103",
+            "gen_task_id": "a103",
             "time_estimate": "00:45",
             "dependencies": ["a101", "a102"],
             "priority": "high"
         },
         {
             "task": "Confirm interview time and location",
-            "task_id": "b201",
+            "gen_task_id": "b201",
             "time_estimate": "00:10",
             "dependencies": [],
             "priority": "medium"
         },
         {
             "task": "Shop for professional interview attire",
-            "task_id": "c301",
+            "gen_task_id": "c301",
             "time_estimate": "01:00",
             "dependencies": [],
             "priority": "low"
@@ -63,21 +63,21 @@ GROCERY_TODO_RESPONSE = {
     "tasks": [
         {
             "task": "Create grocery shopping list",
-            "task_id": "a101",
+            "gen_task_id": "a101",
             "time_estimate": "00:15", 
             "dependencies": [],
             "priority": "medium"
         },
         {
             "task": "Go to grocery store and shop",
-            "task_id": "a102",
+            "gen_task_id": "a102",
             "time_estimate": "01:00",
             "dependencies": ["a101"],
             "priority": "medium"
         },
         {
             "task": "Prepare and cook dinner",
-            "task_id": "a103", 
+            "gen_task_id": "a103", 
             "time_estimate": "00:45",
             "dependencies": ["a102"],
             "priority": "high"

@@ -39,16 +39,16 @@ class BaseClaudeTestCase(TestCase):
     
     def assert_task_structure(self, task_data):
         """Assert that a task data dict has the required structure"""
-        required_fields = ['task', 'task_id', 'time_estimate', 'priority']
+        required_fields = ['task', 'gen_task_id', 'time_estimate', 'priority']
         for field in required_fields:
             self.assertIn(field, task_data, f"Missing required field: {field}")
         
         # Validate priority
         self.assertIn(task_data['priority'], ['low', 'medium', 'high'])
         
-        # Validate task_id format (should be hex-like)
-        self.assertRegex(task_data['task_id'], r'^[a-f0-9]+$', 
-                        "task_id should be hexadecimal")
+        # Validate gen_task_id format (should be hex-like)
+        self.assertRegex(task_data['gen_task_id'], r'^[a-f0-9]+$', 
+                        "gen_task_id should be hexadecimal")
         
         # Validate time_estimate format (should be hh:mm)
         self.assertRegex(task_data['time_estimate'], r'^\d{1,2}:\d{2}$',
