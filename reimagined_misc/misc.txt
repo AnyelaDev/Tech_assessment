@@ -1,9 +1,7 @@
 ./misc\ clean\ merges.sh \
-"feature_branch" \
+"Issue-18-Add-Database-Reset-Button-to-Personal-Assistance-Page" \
 "master"
 
 
 
-
-"read the files in the planning folder. pay attention to the workflow 
-  bits. We are going to use that to fix Issue 15"
+read the files in the planning folder. pay attention to the workflow bits. We are going to use that to fix Issue xx. Remember, Tdd with meaningful tests only.
