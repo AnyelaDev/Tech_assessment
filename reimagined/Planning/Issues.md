@@ -111,6 +111,48 @@ To create issue{{
 **Impact:** Low
 **Priority:** Cosmetic
 
+## Issue 16
+**Title:** Simple Lists to JSON - No Deep Analysis, Simpler Models
 
+**Description:** Simplify the AI processing workflow to convert simple lists directly to JSON without complex analysis. Consider using simpler models for basic task creation scenarios.
 
-{{new issue- Simple lists to Json. No deep analysis. Simpler models?}}
+**Acceptance criteria:**
+- [ ] Create lightweight JSON conversion endpoint for simple list inputs
+- [ ] Implement basic task parsing without deep AI analysis
+- [ ] Evaluate if simpler models can be used for basic scenarios
+- [ ] Add option to bypass complex AI processing for simple lists
+- [ ] Maintain compatibility with existing complex processing workflow
+
+**Impact:** Medium
+**Priority:** Medium
+
+## Issue 17
+**Title:** Change Color in UI for Items with No Dependencies
+
+**Description:** Improve visual distinction in the UI by applying different colors to tasks that have no dependencies to make them more easily identifiable.
+
+**Acceptance criteria:**
+- [ ] Identify tasks with no dependencies in template logic
+- [ ] Apply different CSS styling/color for tasks without dependencies
+- [ ] Ensure color contrast meets accessibility standards
+- [ ] Update UI to clearly distinguish independent tasks
+- [ ] Test visual changes across different screen sizes
+
+**Impact:** Low
+**Priority:** Low
+
+## Issue 18
+**Title:** Add Database Reset Button to Personal Assistance Page
+
+**Description:** Add a convenient database reset button on the personal assistance page (http://127.0.0.1:8000/personal-assistance/) for development and testing purposes.
+
+**Acceptance criteria:**
+- [ ] Add reset database button to personal assistance page
+- [ ] Implement backend endpoint to safely clear all task data
+- [ ] Add confirmation dialog to prevent accidental resets
+- [ ] Ensure reset only affects task/tasklist tables, not auth data
+- [ ] Add success/error feedback messages
+- [ ] Consider restricting to development environment only
+
+**Impact:** Low
+**Priority:** Low

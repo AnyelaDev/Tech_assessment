@@ -1,3 +1,9 @@
 ./misc\ clean\ merges.sh \
 "feature_branch" \
 "master"
+
+
+
+
+"read the files in the planning folder. pay attention to the workflow 
+  bits. We are going to use that to fix Issue 15"
