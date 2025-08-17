@@ -111,4 +111,18 @@ To create issue{{
 **Impact:** Low
 **Priority:** Cosmetic
 
----
+## Issue 15
+**Title:** Fix UNIQUE constraint failed: tasks_task.task_id Database Error
+
+**Description:** The application crashes when processing todo items due to duplicate task_id generation, causing IntegrityError in the database.
+
+**Acceptance criteria:**
+- [ ] Investigate task_id generation logic in TaskGroomer service
+- [ ] Ensure task_id generation produces unique values across all task creation
+- [ ] Fix the duplicate ID issue in tasks/services.py:144
+- [ ] Add validation to prevent duplicate task_id creation
+- [ ] Test task creation with multiple tasks to ensure uniqueness
+
+**Impact:** High
+**Priority:** High
+
