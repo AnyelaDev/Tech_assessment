@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from .models import TaskList, Task
 from .services import TaskGroomer
+import json
 
 
 def home(request):
@@ -116,3 +119,29 @@ def timeline_execution(request, task_list_id):
         'parallel_tasks': parallel_tasks,
         'total_time': task_list.total_estimated_time()
     })
+
+
+@require_http_methods(["POST"])
+def reset_database(request):
+    """
+    Reset database by deleting all tasks and task lists.
+    For development use only.
+    """
+    try:
+        # Count existing data for logging
+        task_count = Task.objects.count()
+        tasklist_count = TaskList.objects.count()
+        
+        # Delete all tasks and task lists (cascading will handle relationships)
+        Task.objects.all().delete()
+        TaskList.objects.all().delete()
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Database reset successfully. Deleted {task_count} tasks and {tasklist_count} task lists.'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
