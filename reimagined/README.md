@@ -26,10 +26,11 @@ cd "/home/anveg/Development/Tech_assessment/reimagined"
 source .venv/bin/activate
 
 # Install dependencies
-pip install django python-dotenv requests
+pip install -r requirements.txt
 
-# Configure Claude API key
-echo "`CLAUDE_API_KEY`=your_claude_api_key_here" >> .env
+# Configure environment variables
+cp .env.example .env
+# Edit .env and add your actual Claude API key
 
 # Run migrations
 python manage.py migrate
@@ -43,6 +44,8 @@ python manage.py runserver
 2. Navigate to Personal Assistance → Executive Function → ToDo Timeline
 3. Enter your todo text (e.g., "Prepare for job interview tomorrow")
 4. View the structured breakdown with priorities, time estimates, and dependencies
+
+For detailed testing instructions including manual testing mode, see [TESTING.md](TESTING.md).
 
 ## Testing
 
