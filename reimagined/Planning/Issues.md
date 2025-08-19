@@ -126,19 +126,5 @@ To create issue{{
 **Impact:** Medium
 **Priority:** Medium
 
-## Issue 21
-**Title:** Fix "Groom my list" Regression - Now Mocking Instead of Working
-
-**Description:** After the pomodoro implementation, the "Groom my list" functionality at http://127.0.0.1:8000/personal-assistance/executive-function/todo-timeline/process/ is now mocking the response instead of actually processing the todo list with Claude AI.
-
-**Acceptance criteria:**
-- [ ] Investigate what caused the regression in "Groom my list" functionality
-- [ ] Restore actual Claude AI processing instead of mock responses
-- [ ] Ensure todo list processing works end-to-end with real AI integration
-- [ ] Verify no side effects from pomodoro implementation affected the core functionality
-- [ ] Test that both pomodoro and todo grooming features work independently
-
-**Impact:** High
-**Priority:** High
 
 {{Create a new issue for containerizing this app for development, test and production}}
