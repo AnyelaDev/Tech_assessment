@@ -74,15 +74,18 @@ def test_claude_api_direct():
         except requests.exceptions.RequestException as e:
             print(f"❌ {endpoint}: Request failed - {e}")
     
-    # Test our TaskGroomer
-    print("\n🧪 Testing TaskGroomer...")
+    # Test TaskGroomer with actual groom_tasks function
+    print("\n🧪 Testing TaskGroomer.groom_tasks()...")
     try:
         groomer = ClaudeTaskGroomer()
         test_todo = "Do laundry\nBuy groceries"
-        result = groomer.groom_tasks(test_todo, "test context")
+        test_context = "test context"
         
-        print("TaskGroomer result:")
-        print(json.dumps(result, indent=2)[:500] + "..." if len(str(result)) > 500 else json.dumps(result, indent=2))
+        print(f"🔍 Calling groomer.groom_tasks('{test_todo}', '{test_context}')")
+        result = groomer.groom_tasks(test_todo, test_context)
+        
+        print("📄 groom_tasks result:")
+        print(json.dumps(result, indent=2))
         
         return result.get('success', False)
         
