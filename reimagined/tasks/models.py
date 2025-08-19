@@ -45,8 +45,16 @@ class Task(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
+        """Ensure validations run before saving."""
         if not self.task_id:
             self.task_id = self.generate_unique_task_id()
+
+        # Run model validations every time we save. This makes sure that
+        # constraints defined in ``clean`` (like validating time estimates or
+        # detecting circular dependencies) are enforced even when creating
+        # objects through ``objects.create`` or ``save`` directly.
+        self.full_clean()
+
         super().save(*args, **kwargs)
     
     def generate_unique_task_id(self):
@@ -107,12 +115,17 @@ class Task(models.Model):
         # Check max dependencies limit
         if self.dependencies.count() >= 4:
             raise ValidationError("Maximum 4 dependencies allowed per task")
-        
+
         # Find the target task
         try:
             target_task = Task.objects.get(task_id=task_id_hex.lower())
         except Task.DoesNotExist:
             raise ValidationError(f"Task with ID {task_id_hex} does not exist")
+
+        # Prevent self-dependency which would immediately create a circular
+        # reference and break scheduling logic.
+        if target_task.pk == self.pk:
+            raise ValidationError("A task cannot depend on itself")
         
         # Check if already a dependency
         if target_task in self.dependencies.all():
