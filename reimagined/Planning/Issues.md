@@ -128,3 +128,22 @@ To create issue{{
 
 
 {{Create a new issue for containerizing this app for development, test and production}}
+
+{{create a new issue for showing fail message when claude responds with a bad code, asking the user to groom the list themselves
+
+This is an example of a response when there is a bad response:
+
+POST /v1/messages: 400 - Bad Request
+    Error details: {
+  "type": "error",
+  "error": {
+    "type": "invalid_request_error",
+    "message": "Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+  },
+  "request_id": "req_011CSHcMtDhK1nG3r5ftrt39"
+}
+
+The user should be shown a visual notification saying sorry, the AI service is down at the moment, please list your tasks separated by new lines
+
+when the user has done that, turn each separate line as a task name. generate the task list with those names, and empty dependencies. 
+}}
