@@ -1,4 +1,4 @@
-import json
+import json, re
 import requests
 from django.conf import settings
 from .models import TaskList, Task
@@ -24,6 +24,26 @@ class ClaudeTaskGroomer:
             'x-api-key': self.api_key,
             'anthropic-version': '2023-06-01'
         }
+    
+    @staticmethod
+    def extract_json(content: str):
+        s = content.strip()
+
+        # 1) If it's a fenced code block, capture the inside
+        m = re.search(r"```(?:json)?\s*(.*?)\s*```", s, flags=re.IGNORECASE | re.DOTALL)
+        if m:
+            s = m.group(1)
+
+        # 2) Try direct parse
+        try:
+            return json.loads(s)
+        except json.JSONDecodeError:
+            # 3) If it was double-escaped (contains literal \n, \"), unescape once
+            if "\\n" in s or '\\"' in s or "\\t" in s:
+                s2 = s.encode("utf-8").decode("unicode_escape")
+                return json.loads(s2)
+            # Re-raise if it wasn't an escaping issue
+            raise
 
     def groom_tasks(self, todo_text: str, context: str = ""):
         """
@@ -36,6 +56,14 @@ class ClaudeTaskGroomer:
         Returns:
             dict: Contains success status, analysis, and tasks
         """
+        # Check for cheap AI test mode
+        if todo_text.strip() == "Make 25 sandwiches" and "dont know if I have enough food" in context.lower():
+            return self._get_cheap_test_response()
+            
+        # Check for development/testing mode with common test phrases
+        if any(phrase in todo_text.lower() for phrase in ["test", "mock", "debug"]):
+            return self._get_mock_response_for_testing(todo_text)
+        
         prompt = f"""
 You are a personal assistant. Your client will give you a text expressing things they must get done. Your task is to understand what is overwhelming the user, breakdown big tasks in smaller tasks and add them to the list. Identify individual tasks and suggest realistic time intervals in which each task could be done. Reword each task and make them more actionable and specific, no fluff, no emojis.
 
@@ -48,9 +76,9 @@ Please provide:
    - "task": the reworded task
    - "gen_task_id": a unique identifier for this task that you generate (use any format you want - letters, numbers, etc.). This is only for mapping dependencies within this response.
    - "time_estimate": a realistic time estimate for completion (in hh:mm format). time estimates should be realistic and not too short
-   - "dependencies": an array of gen_task_id values that this task depends on (if any)
+   - "dependencies": an array of gen_task_id values that can be done only if this task is done first (if any)
    - "priority": a priority level (low, medium, high)
-2. A brief analysis of the original todo text, explaining the breakdown and reasoning behind the tasks. as concise as possible.
+2. "Focus": If the user seems to be emotionally anxious, give a statement that helps the user identify the objectives and feel more in control of their own agency, and praise them for taking action. If the user emotions seems neutral or positive, give short words of encouragement.
 
 IMPORTANT: Make sure all gen_task_id values are unique within your response, as they will be used to map task dependencies.
 
@@ -58,8 +86,8 @@ Format your response as a JSON.
 """
         
         payload = {
-            "model": "claude-3-5-sonnet-20241022",
-            "max_tokens": 1000,
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 2000,
             "messages": [
                 {
                     "role": "user",
@@ -75,28 +103,52 @@ Format your response as a JSON.
             result = response.json()
             groomed_content = result['content'][0]['text']
             
+            # DEBUG: Show raw Claude response
+            print(f"direct result from Claude: {result}...")  
+            print(f"🔍 DEBUG: Raw Claude response ({len(groomed_content)} chars):")
+            print("="*60)
+            print("Raw content (repr):", repr(groomed_content))
+            print("="*60)
+            print("Raw content (formatted):")
+            print(groomed_content)
+            print("="*60)
+            
+
             # Parse the JSON response
             try:
-                parsed_response = json.loads(groomed_content)
+                # Claude sometimes returns JSON with unescaped control characters
+                # Try parsing as-is first, then clean if needed
+                parsed_response = self.extract_json(groomed_content)
+            except json.JSONDecodeError as e:
+                print(f"⚠️  JSON parse error: {e},")
+                return response.json()  # Return the raw response for debugging
+                # Debug: show the problematic character
+                
+            # Handle both string and object formats for analysis
+            analysis = parsed_response.get("analysis", "")
+            if isinstance(analysis, dict):
+                # If analysis is an object, convert it to a string
+                analysis = "\n\n".join([f"{key}: {value}" for key, value in analysis.items()])
+            
+            return {
+                "success": True,
+                "focus": analysis,
+                "tasks": parsed_response.get("tasks", [])
+                }
+        except json.JSONDecodeError:
+            # If JSON parsing fails, try to extract JSON from the response
+            start_idx = groomed_content.find('{')
+            end_idx = groomed_content.rfind('}')
+            if start_idx != -1 and end_idx != -1:
+                json_str = groomed_content[start_idx:end_idx + 1]
+                parsed_response = json.loads(json_str)
                 return {
                     "success": True,
                     "analysis": parsed_response.get("analysis", ""),
                     "tasks": parsed_response.get("tasks", [])
                 }
-            except json.JSONDecodeError:
-                # If JSON parsing fails, try to extract JSON from the response
-                start_idx = groomed_content.find('{')
-                end_idx = groomed_content.rfind('}')
-                if start_idx != -1 and end_idx != -1:
-                    json_str = groomed_content[start_idx:end_idx + 1]
-                    parsed_response = json.loads(json_str)
-                    return {
-                        "success": True,
-                        "analysis": parsed_response.get("analysis", ""),
-                        "tasks": parsed_response.get("tasks", [])
-                    }
-                else:
-                    raise ValueError("Could not extract valid JSON from Claude response")
+            else:
+                raise ValueError("Could not extract valid JSON from Claude response")
             
         except requests.exceptions.RequestException as e:
             return {

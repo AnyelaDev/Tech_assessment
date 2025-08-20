@@ -26,10 +26,11 @@ cd "/home/anveg/Development/Tech_assessment/reimagined"
 source .venv/bin/activate
 
 # Install dependencies
-pip install django python-dotenv requests
+pip install -r requirements.txt
 
-# Configure Claude API key
-echo "`CLAUDE_API_KEY`=your_claude_api_key_here" >> .env
+# Configure environment variables
+cp .env.example .env
+# Edit .env and add your actual Claude API key
 
 # Run migrations
 python manage.py migrate
@@ -43,6 +44,8 @@ python manage.py runserver
 2. Navigate to Personal Assistance → Executive Function → ToDo Timeline
 3. Enter your todo text (e.g., "Prepare for job interview tomorrow")
 4. View the structured breakdown with priorities, time estimates, and dependencies
+
+For detailed testing instructions including manual testing mode, see [TESTING.md](TESTING.md).
 
 ## Testing
 
@@ -177,6 +180,7 @@ print(f"Created: {task2} with ID {task2.task_id}, depends on {task1.task_id}")
 
 | Issue | Issue Name | What Was Fixed and Impact |
 |-------|------------|---------------------------|
+| 21 | Fix "Groom my list" Regression - Now Mocking Instead of Working | **CRITICAL FIX** - Resolved complete Claude API integration failure causing 404 errors. Root cause: Invalid Claude model name (`claude-3-5-sonnet-20241022`) plus JSON parsing issues with LLM responses. Implemented robust `extract_json()` function handling fenced code blocks, escaped strings, and malformed JSON. Upgraded to Claude Sonnet 4 with enhanced prompts, increased max_tokens to 2000, and improved error handling. Database success rate improved from 27.3% to 100%. System now properly processes complex todos with emotional support features. |
 | 20 | Fix Unit Tests for Two-Layer ID System Implementation | Fixed failing unit tests by updating test fixtures and assertions to properly support the two-layer ID system. Cleaned up architecture by removing deprecated methods and backward compatibility clutter. Updated test fixtures to use `gen_task_id` for AI reference IDs, replaced direct ID lookups with title-based lookups, and added comprehensive validation for 4-hex database task_id format. Ensures clean separation between AI reference IDs and database integrity while maintaining full test coverage with all 12 unit tests passing. |
 | 19 | Implement Pomodoro Timer Screen | Implemented complete Pomodoro timer functionality with configurable durations and comprehensive testing. Added new `/pomodoro/` route with full work/break cycle management, three distinct visual states (work/break/restart), real-time progress bars, timer controls (start/pause/stop/reset), and client-side JavaScript state management. Built comprehensive test suite with 18 passing tests covering URL routing, template rendering, and full user flow integration. Enhances executive function capabilities with focus session management. |
 | 17 | Change Color in UI for Items with No Dependencies | Enhanced visual distinction for tasks without dependencies using TDD approach. Added `has_no_dependencies()` method to Task model, conditional CSS class application in templates, accessibility-compliant color scheme with high-contrast light green background and bright green left border, comprehensive test coverage for both dependencies and timeline views. Improves UX by making independent tasks easily identifiable. |

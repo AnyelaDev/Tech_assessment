@@ -89,7 +89,10 @@ def executive_function(request):
 
 
 def todo_timeline_input(request):
-    return render(request, 'tasks/todo_timeline_input.html')
+    from django.conf import settings
+    return render(request, 'tasks/todo_timeline_input.html', {
+        'debug': settings.DEBUG
+    })
 
 
 def todo_dependencies(request, task_list_id):

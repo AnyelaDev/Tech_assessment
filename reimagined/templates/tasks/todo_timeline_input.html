@@ -17,14 +17,14 @@
                       name="todo_text" 
                       placeholder="Enter your tasks here..."
                       rows="15" 
-                      required></textarea>
+                      required>{% if debug %}Make 25 sandwiches{% endif %}</textarea>
         </div>
         
         <div class="form-group">
             <textarea id="context" 
                       name="context" 
                       placeholder="Context (optional): Provide additional context for the AI to consider when grooming your tasks..."
-                      rows="3"></textarea>
+                      rows="3">{% if debug %}I dont know if I have enough food{% endif %}</textarea>
             <small style="color: #666; font-size: 0.85rem; margin-top: 5px; display: block;">
                 💡 Optional: Add context like deadlines, priorities, or project details
             </small>
@@ -44,7 +44,7 @@
         </div>
         
         <div class="button-section">
-            <button type="submit" class="btn-primary">Groom my list (Mock)</button>
+            <button type="submit" class="btn-primary">Groom my list</button>
             <a href="/personal-assistance/executive-function/" class="btn-back">Back</a>
         </div>
     </form>

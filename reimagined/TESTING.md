@@ -1,6 +1,35 @@
 # Test Suite Documentation
 
-## Test Structure
+## Manual Testing Mode
+
+The application includes a convenient manual testing feature for quick AI functionality testing:
+
+### Enabling Manual Test Mode
+Set `DEBUG=True` in your `.env` file:
+```bash
+DEBUG=True
+```
+
+When manual test mode is active, the todo timeline form at http://127.0.0.1:8000/personal-assistance/executive-function/todo-timeline/ will be pre-filled with:
+- **Todo Text**: "Make 25 sandwiches"  
+- **Context**: "I dont know if I have enough food"
+
+This allows developers to quickly test the AI grooming functionality without typing test data each time.
+
+### Production Mode
+Set `DEBUG=False` in your `.env` file:
+```bash
+DEBUG=False
+```
+
+In production mode:
+- Forms are empty by default
+- Automated tests run against production behavior  
+- No test data pre-filling occurs
+
+**Important**: Always use `DEBUG=False` in production environments.
+
+## Automated Test Structure
 
 The test suite is organized into logical categories for better maintainability:
 

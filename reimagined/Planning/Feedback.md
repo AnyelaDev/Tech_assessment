@@ -1,35 +1,29 @@
-# Issue 19 - Pomodoro Timer Implementation Questions
+# Issue 21 - Fix "Groom my list" Regression Questions
 
-Before starting implementation, these aspects need clarification:
+Before starting work, these aspects need clarification:
 
-## Scope Questions to Answer:
+## Key Questions to Answer:
 
-### 1. **Page Structure & Navigation**
-- The Pomodoro timer runs on a separate page/route: http://127.0.0.1:8000/personal-assistance/executive-function/pomodoro 
-- Users return to the main executive function features during/after a pomodoro session by pressing a button which says: "Back"
+### 1. Current Behavior
+- What exactly does the "mocking" response look like when clicking "Groom my list"? it justssends a post request, but the UI shows nothing, its not moving to the next screen with the tasks list, and the input fields get emptied.
+- Is it showing fake data, error messages, or placeholder content?None of these. it just clears everything and stays in http://127.0.0.1:8000/personal-assistance/executive-function/todo-timeline/process/
 
-### 2. **Timer Implementation Details**
-- **Progress Bar Type**: JavaScript-driven visualization?
-- **Timer Accuracy**: basic `setInterval` is sufficient
-- **State Persistence**: once any timer is done, a visual notification should show and the user should be taken to the http://127.0.0.1:8000/personal-assistance/executive-function/pomodoro screen. If the user was writing anything, that data should persist.  Survives navigation, does not survive refresh. 
+### 2. Timeline 
+- When exactly did this regression occur? (after which commit/change?) after Implementing Issue 19 or Issue 20 fix. Both have been merged into the master branch. In a0c23133449f03a65bedbdea5c6917e32e0fbf46 it was working.
+- Was AI integration working immediately before pomodoro implementation? I think yes.
 
-### 3. **User Experience Flow**
-- Can users pause/stop/reset timers mid-cycle? yes.
-- Should there be audio/visual notifications when timers complete? a visual notification.
-- Any keyboard shortcuts or accessibility features needed? not for now.
+### 3. Code Changes
+- Which specific files were modified during pomodoro implementation (Issue 19)? look it up with git commands.
 
-### 4. **Integration with Existing System**
-- Should completed pomodoros be tracked/logged in the database? No
-- Any connection to the existing task management features? We will use the timer features in the future. The timer feature will be editable, meaning users will chose the duration of their timers. progress bar feature will be used also. 
-- Does this need authentication or can it work for anonymous users? no authentication is needed at all. 
+### 4. Environment/Configuration
+- Are Claude API credentials still properly configured? I think so. Do we have implementation or error handling that will show if the API credentials dont work? We should also comunicate it to the user via UI if it happens. 
+- Is there a test flag or mock mode accidentally enabled? I think yes. But I cant confirm please investigate
+- Are there any new environment variables needed? No
 
-### 5. **Testing Strategy** 
-- Given the TDD approach, how do we test JavaScript timers? we run the real timers. no mocking.
-- Do we need integration tests for the full cycle, or focus on unit tests for timer logic? we need to start with unit tests, and then full cycle. 
+### 5. Integration Analysis
+- Do pomodoro and AI grooming share any common code paths? they do. I explicitely asked the timer function to be created in a way that we will be able to use in a later stage after AI grooming. In fact we might need to separate the code in apps. The AI grooming is an app, the tasks creation is another, the pomodoro algorithm is another, the timers is another app. Task creation used the AI grooming result and timers. The pomodoro algorithm uses the timers as well. 
+- Are there URL routing conflicts or view function interference? we have to check, and also write tests for that in our test suite if there are no tests for this.
 
-### 6. **Technical Architecture**
-- Pure client-side JavaScript or do we need server-side state management? Client-side
-- Should timer state survive page refreshes? no
-
-### 7. **Real vs Demo Timers**
-- The spec says 5-second timers - is this intentional for demo/testing, or should it be configurable for real 25-minute pomodoros? Ideally should be configurable, but keep default of 5 seconds for easy manual tessting. 
+### 6. Testing Approach
+- How do we test the fix without expensive API calls during development? create a "cheap AI test" which sends a specific todo_text in the groom_tasks function. like ´If cheap_AI_test: todo_text="""Make 25 sandwiches""", context "I dont know if I have enough food"
+- Should we verify both pomodoro AND AI grooming work independently? yes
